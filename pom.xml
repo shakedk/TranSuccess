@@ -21,6 +21,11 @@
 		<artifactId>httpclient</artifactId>
 		<version>4.3.4</version>
 	</dependency>
+	<dependency>
+		<groupId>de.grundid.opendatalab</groupId>
+		<artifactId>geojson-jackson</artifactId>
+		<version>1.0</version>
+	</dependency>
 	
   <dependency>
 	<groupId>commons-codec</groupId>
