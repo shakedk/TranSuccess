@@ -3,6 +3,7 @@ package transSuccess.controller;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,14 +55,15 @@ public class TransSuccessController {
 		return "trade Done";
 	}
 
-	@RequestMapping(value = "/areas", method = RequestMethod.GET)
-	@ResponseBody
+	@RequestMapping(value = "/areas", method = RequestMethod.GET,
+			produces="application/json")
+	
 	// public String customerFormSubmit(@RequestParam(value = "fName",
 	// required=false) String fName, @RequestParam(value = "lName",
 	// required=false) String lName, @RequestParam(value = "sPhone" ,
 	// required=false) String sPhone, @RequestParam(value = "email",
 	// required=false) String sEmail ){
-	public String getAreas() throws JsonProcessingException {
+	public @ResponseBody FeatureCollection getAreas() throws JsonProcessingException {
 		FeatureCollection featureCollection = new FeatureCollection();
 		Feature feature = new Feature();
 		Map<String, Object> properties = new HashMap<String, Object>();
@@ -508,8 +510,8 @@ public class TransSuccessController {
 		feature.setGeometry(geometry);
 		featureCollection.add(feature);
 
-		String json = new ObjectMapper().writeValueAsString(featureCollection);
-		return json;
+//		String json = new ObjectMapper().writeValueAsString(featureCollection);
+		return featureCollection;
 	}
 
 	public static void main(String[] args) throws Exception {
