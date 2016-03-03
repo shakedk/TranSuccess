@@ -58,11 +58,6 @@ public class TransSuccessController {
 	@RequestMapping(value = "/areas", method = RequestMethod.GET,
 			produces="application/json")
 	
-	// public String customerFormSubmit(@RequestParam(value = "fName",
-	// required=false) String fName, @RequestParam(value = "lName",
-	// required=false) String lName, @RequestParam(value = "sPhone" ,
-	// required=false) String sPhone, @RequestParam(value = "email",
-	// required=false) String sEmail ){
 	public @ResponseBody FeatureCollection getAreas() throws JsonProcessingException {
 		FeatureCollection featureCollection = new FeatureCollection();
 		Feature feature = new Feature();
