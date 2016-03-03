@@ -7,11 +7,12 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import transSuccess.model.Trade;
-import transSuccess.service.TransSuccessService;
 import transSuccess.service.PublicApiService;
+import transSuccess.service.TransSuccessService;
 
 @ComponentScan("transSuccess")
 @Controller
@@ -40,7 +41,17 @@ public class TransSuccessController {
     	return "trade Done";
     }
     
-    
+    @RequestMapping(value = "/map", method=RequestMethod.GET)
+    //public String customerFormSubmit(@RequestParam(value = "fName", required=false) String fName, @RequestParam(value = "lName", required=false) String lName, @RequestParam(value = "sPhone" , required=false) String sPhone, @RequestParam(value = "email", required=false) String sEmail ){
+    public String customerFormSubmit(){
+/*        Customer customer = new Customer();
+        customer.setfName(fName);
+        customer.setlName(lName);
+        customer.setsPhone(sPhone);
+        customer.setEmail(sEmail);
+        System.out.println("Customer Object = " + customer );*/
+        return "map.html";
+    }
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(TransSuccessController.class, args);
