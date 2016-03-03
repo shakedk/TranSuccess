@@ -86,10 +86,12 @@ Next iterations: suggestions:
 <body>
 
 <div id="map">
-    <script type="text/javascript">
+    <script type="text/javascript">    
         //Importing the mapbox tiles layer. For our purposes, the example map is sufficient
-        var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/examples.map-zr0njcqy/{z}/{x}/{y}.png', {
-            attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+        var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token={token}', {        								
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+           	mapId: 'mapbox-streets',
+            token: 'pk.eyJ1Ijoic2hha2VkayIsImEiOiJjaWxjYzVxbzIwMDZud2dsejg3Zmw3dncyIn0.1mxg8ZqXNXzMZ2OkH9os5A'
         });
         //Importing the map from leaflet and adding the tiles layer.
         //The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).

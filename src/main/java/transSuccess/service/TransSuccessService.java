@@ -25,11 +25,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
-@Component
+@Service
 public class TransSuccessService {
 	private static final String DOMAIN = "btc-e.com";
 	private static long _nonce= System.nanoTime()/100000000;
