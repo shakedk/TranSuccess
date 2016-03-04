@@ -1,6 +1,7 @@
 package transSuccess.controller;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +39,7 @@ public class TransSuccessController {
 
 	@RequestMapping(value = "/areas", method = RequestMethod.GET,
 			produces="application/json")
-	public @ResponseBody String getTelAvivAreas() throws JsonProcessingException {
+	public @ResponseBody String getTelAvivAreas() throws IOException {
 		
 		JsonNode jsonNode = transSuccessService.getTelAvivAreas();
 		return jsonNode.toString();
