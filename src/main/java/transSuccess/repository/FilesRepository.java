@@ -17,28 +17,31 @@ public class FilesRepository {
 	
 	public FilesRepository(){}
 	
+	private static final String AREAS_PATH = "static/tel_aviv_areas.json";
+	private static final String STATION_PATH = "static/stations.geojson";
+	
 	public JsonNode getTelAvivAreas(){
-	     // JSONParser parser = new JSONParser();
-    	ClassLoader classLoader = getClass().getClassLoader();
-    	File file = new File(classLoader.getResource("static/tel_aviv_areas.json").getFile());
-    	ObjectMapper m = new ObjectMapper();
-    	JsonNode rootNode = null;
-		try {
-			rootNode = m.readTree(file);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	return rootNode;
+		return getFileFromPath(AREAS_PATH);
 	}
-	            //URL jsonImput =
-	            //        resources.class.getResource("icons/printer63.png");
-/*	            Object obj = new FileReader(tel_avi "/Users/<username>/Documents/file1.txt");
-	 
-	            JSONObject jsonObject = (JSONObject) obj;*/
-
+	public JsonNode getTelAvivStations(){
+		return getFileFromPath(STATION_PATH);
+	}	
+	private JsonNode getFileFromPath(String path){
+	     // JSONParser parser = new JSONParser();
+	   	ClassLoader classLoader = getClass().getClassLoader();
+	   	File file = new File(classLoader.getResource(path).getFile());
+	   	ObjectMapper m = new ObjectMapper();
+	   	JsonNode rootNode = null;
+			try {
+				rootNode = m.readTree(file);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	   	return rootNode;
+	}
 	
 }

@@ -18,4 +18,8 @@ public class TransSuccessService {
 		return filesRepository.getTelAvivAreas();
 	}
 	
+	public JsonNode getTelAvivStations(){
+		return filesRepository.getTelAvivStations();
+	}
+	
 }

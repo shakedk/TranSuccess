@@ -52,7 +52,7 @@ svg {
 }
 
 path {
-	stroke-width: 7px;
+	stroke-width: 3px;
 	stroke-opacity: 0.5;
 }
 
@@ -113,9 +113,16 @@ path {
 				"areaBorderColor" : "rgb(152,78,163)",
 			};
 			// color used for HeatMap
-			var heatScheme = [ 'rgb(247,252,245)', 'rgb(229,245,224)',
-					'rgb(199,233,192)', 'rgb(161,217,155)', 'rgb(116,196,118)',
-					'rgb(65,171,93)', 'rgb(35,139,69)', 'rgb(0,90,50)' ];
+			var heatScheme =  [ '#800026' ,
+			                    '#bd0026' ,
+			                    '#e31a1c' ,
+			                    '#fc4e2a' ,
+			                   '#fd8d3c' ,
+			                    '#feb24c' ,
+			                   '#fed976' ,
+			                   '#ffeda0' ,
+			                    '#ffffcc' ,
+			                    '#ffffcc' ];
 			//Holds the hues that will be assigned for the waiting time mapping (the station changeStations color).
 			//The actual setting is done after the relevant number of optional changing station is calculated.
 			var stationsHues;
@@ -127,22 +134,7 @@ path {
 				"fillColor" : mappingColors.areaBorderColor
 			};
 			var areasLayer;
-			//Getting the area polygons from the server
-			$.ajax({
-				type : "GET",
-				contentType : "application/json; charset=utf-8",
-				url : 'http://localhost:8080/areas',
-				dataType : 'json',
-				async : true,
-				data : "{}",
-				success : function(data) {
-					//var pos_data = data;
-					draw_areas_on_map(data);
-				},
-				error : function(result) {
 
-				}
-			})
 			draw_areas_on_map = function (data) {
 				
 				areasLayer = L.geoJson(data, {
@@ -153,7 +145,7 @@ path {
 			
 			  function getStyle(feature) {
 			      return {
-			          weight: 1,
+			          weight: 0.5,
 			          opacity: 0.1,
 			          color: 'black',
 			          fillOpacity: 0.7,
@@ -197,7 +189,7 @@ path {
 
 			      // highlight feature
 			      layer.setStyle({
-			          weight: 3,
+			          weight: 2,
 			          opacity: 0.3,
 			          fillOpacity: 0.9
 			      });
@@ -225,10 +217,89 @@ path {
 				var div = L.DomUtil.create('div', 'legend');
 				div.innerHTML += '<p style="margin:auto; background: linear-gradient(to right, '
 						+ heatScheme + ')"</p>' + '<br>';
-				div.innerHTML += '<p style="font-weight: bold"> longest waiting &#8596 shortest waiting</p>';
+				div.innerHTML += '<p style="font-weight: bold"> Highest Accessibility &#8596 Lowest Accessibility</p>';
 				return div;
 			};
 			legend.addTo(map);
+			
+			//Adding a legend with sequential horizontal bar for easy access
+			var button = L.control({
+				position : 'topright'
+			});
+			button.onAdd = function(map) {
+				var div = L.DomUtil.create('div', 'legend');
+				div.innerHTML = '<form><input id="command" type="checkbox"/>Add Stations<br><input id="areas" type="checkbox"/>Add Areas</form>'; 
+				return div;
+			};
+			button.addTo(map);
+			// add the event handler
+			function handleCommand() {
+			  // alert("Clicked, checked = " + this.checked);
+				if(this.checked){
+			 	 $.ajax({
+					type : "GET",
+					contentType : "application/json; charset=utf-8",
+					url : 'http://localhost:8080/stations',
+					dataType : 'json',
+					async : true,
+					data : "{}",
+					success : function(data) {
+						//var pos_data = data;
+						draw_stations_on_map(data);
+					},
+					error : function(result) {
+	
+					}
+				})
+				}else{
+					stationLayer.clearLayers();
+				}
+				draw_stations_on_map = function (data) {
+					
+					stationLayer = L.geoJson(data, {
+							style : getMarkerStyle
+						}).addTo(map);
+				}
+				  function getMarkerStyle() {
+				      return {
+				    	  color: 'black',
+				    	  iconUrl: 'none'
+				      };
+				  }
+			}
+			//Adding a legend with sequential horizontal bar for easy access
+			var button = L.control({
+				position : 'topright'
+			});
+
+			// add the event handler
+			function handleAreaCommand() {
+			  // alert("Clicked, checked = " + this.checked);
+				if(this.checked){
+					//Getting the area polygons from the server
+					$.ajax({
+						type : "GET",
+						contentType : "application/json; charset=utf-8",
+						url : 'http://localhost:8080/areas',
+						dataType : 'json',
+						async : true,
+						data : "{}",
+						success : function(data) {
+							//var pos_data = data;
+							draw_areas_on_map(data);
+						},
+						error : function(result) {
+
+						}
+					})
+				} else{
+					areasLayer.clearLayers();
+				}
+			}
+			document.getElementById ("areas").addEventListener ("click", handleAreaCommand, false);
+			document.getElementById ("command").addEventListener ("click", handleCommand, false);
+			
+			
 			//Using SVG, iterating the stations and displaying only the
 			//change stations (in this example there are only 8 stations)
 		</script>
