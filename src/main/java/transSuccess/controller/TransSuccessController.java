@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import transSuccess.service.PublicApiService;
@@ -34,30 +35,33 @@ import transSuccess.service.TransSuccessService;
 public class TransSuccessController {
 
 	@Autowired
-	TransSuccessService btcService;
+	TransSuccessService transSuccessService;
 	@Autowired
 	PublicApiService publicApiService;
 
-	@RequestMapping("/btc")
-	@ResponseBody
-	String home() {
-		HttpResponse result = btcService.authenticatedHTTPRequest("getInfo", null);
-		if (result != null)
-			return result.toString();
-		else
-			return "Hello World!";
-	}
-
-	@RequestMapping("/public/trade")
-	@ResponseBody
-	String trade() {
-		publicApiService.getPublicTrade();
-		return "trade Done";
-	}
-
 	@RequestMapping(value = "/areas", method = RequestMethod.GET,
 			produces="application/json")
+	public @ResponseBody String getTelAvivAreas() throws JsonProcessingException {
+		
+		JsonNode jsonNode = transSuccessService.getTelAvivAreas();
+		return jsonNode.toString();
+		
+/*		FeatureCollection featureCollection = new FeatureCollection();
+		Feature feature = new Feature();
+		Map<String, Object> properties = new HashMap<String, Object>();
+		properties.put("line", new String("171"));
+		feature.setProperties(properties);
+		GeoJsonObject geometry = new LineString(new LngLatAlt(34.816089, 31.878739),
+				new LngLatAlt(34.817235, 31.878499), new LngLatAlt(34.817211, 31.878308));
+		feature.setGeometry(geometry);
+		featureCollection.add(feature);
+
+//		String json = new ObjectMapper().writeValueAsString(featureCollection);
+		return featureCollection;*/
+	}
 	
+	@RequestMapping(value = "/areas2", method = RequestMethod.GET,
+			produces="application/json")
 	public @ResponseBody FeatureCollection getAreas() throws JsonProcessingException {
 		FeatureCollection featureCollection = new FeatureCollection();
 		Feature feature = new Feature();

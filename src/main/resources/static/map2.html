@@ -125,7 +125,7 @@ path {
 					.append("g").attr("class", "leaflet-zoom-hide");
 			//Styling variables used for the routes path layer
 			var sAreaStyle = {
-				"color" : mappingColors.areaBorderColor
+				"fillColor" : mappingColors.areaBorderColor
 			};
 
 			//Getting the area polygons from the server
@@ -145,11 +145,33 @@ path {
 				}
 			})
 			draw_areas_on_map = function (data) {
-				var x = data;
+				
 				L.geoJson(data, {
-						style : sAreaStyle
+						style : getStyle
 					}).addTo(map);
 			}
+			
+			  function getStyle() {
+			      return {
+			          weight: 2,
+			          opacity: 0.1,
+			          color: 'black',
+			          fillOpacity: 0.7,
+			          fillColor: getColor(400)
+			      };
+			  }
+			  // get color depending on population density value
+			  function getColor(d) {
+			      return d > 1000 ? '#8c2d04' :
+			          d > 500  ? '#cc4c02' :
+			          d > 200  ? '#ec7014' :
+			          d > 100  ? '#fe9929' :
+			          d > 50   ? '#fec44f' :
+			          d > 20   ? '#fee391' :
+			          d > 10   ? '#fff7bc' :
+			          '#ffffe5';
+			  }
+
 			//Adding a legend with sequential horizontal bar for easy access
 			var legend = L.control({
 				position : 'bottomright'
