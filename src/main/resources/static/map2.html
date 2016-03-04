@@ -246,6 +246,8 @@ path {
 					success : function(data) {
 						//var pos_data = data;
 						draw_stations_on_map(data);
+						$("img.leaflet-marker-icon").css("margin-left", "0px").css("margin-top", "-10px").css("width", "11px").css("height", "11px");
+						$(".leaflet-marker-shadow").css("margin-left", "0px").css("margin-top", "0px").css("width", "0px").css("height", "0px");
 					},
 					error : function(result) {
 	
