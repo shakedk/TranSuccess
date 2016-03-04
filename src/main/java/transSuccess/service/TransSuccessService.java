@@ -42,7 +42,8 @@ public class TransSuccessService {
 		List<Feature> features = featureCollection.getFeatures();
 		for(Feature feature : features){
 			String desc = feature.getProperty("Description");
-			String id = desc.substring(desc.indexOf("ms_ezor")+11,14);
+			int idIndex = desc.indexOf("ms_ezor")+10;
+			String id = desc.substring(idIndex,idIndex+3);
 			for(AreaRank areaRank : areaRanks){
 				int rankId = areaRank.getArea_id();
 				if(Integer.parseInt(id)==rankId){
