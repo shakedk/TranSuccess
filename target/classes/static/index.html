@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+    <script src="sockjs-0.3.4.js"></script>
+    <script src="stomp.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src = "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            connect();
+            setTimeout(function() {
+                sendName();
+            }, 300);
+        });
+
+        var stompClient = null;
+
+        function connect() {
+            var socket = new SockJS('/hello');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/bugs', function(bugs){
+                    showBugs(JSON.parse(bugs.body));
+                });
+            });
+        }
+
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            console.log("Disconnected");
+        }
+
+        function sendName() {
+            stompClient.send("/app/hello", {}, JSON.stringify({ 'name': '' }));
+        }
+
+        function showBugs(message) {
+            var response = document.getElementById('response');
+            var oldP = document.getElementById('p')
+            if (oldP != undefined) {
+                response.removeChild(oldP);
+            }
+            var p = document.createElement('p');
+            p.id="p";
+            p.style.wordWrap = 'break-word';
+            tableCreate(p, message);
+            response.appendChild(p);
+        }
+        function claim(){
+            $("#conversationDiv tbody tr input:checked").parent().parent().children().next().next().next().text("Claimed");
+        }
+        function openBugzilla(){
+            window.open('https://bugzilla.eng.vmware.com/enter_bug.cgi?product=ITBM%20Cloud%20Business%20Manager','_blank');
+        }
+        function tableCreate(el, data)
+        {
+            var tbl  = document.createElement("table");
+            tbl.className="responstable";
+
+            var tr = tbl.insertRow();
+            var td = document.createElement("th");
+            tr.appendChild(td);
+            td.appendChild(document.createTextNode(""));
+            var td1 = document.createElement("th");
+            tr.appendChild(td1);
+            td1.appendChild(document.createTextNode("Bug description"));
+            var td11 = document.createElement("th");
+            tr.appendChild(td11);
+            td11.appendChild(document.createTextNode("Commit message"));
+            var td2 = document.createElement("th");
+            tr.appendChild(td2);
+            td2.appendChild(document.createTextNode("Potential Culprit"));
+            var td3 = document.createElement("th");
+            tr.appendChild(td3);
+            td3.appendChild(document.createTextNode("Status"));
+
+            for (var i = 0; i < data.length; ++i)
+            {
+                var tr = tbl.insertRow();
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.name = "name";
+                var td = tr.insertCell();
+                td.appendChild(checkbox)
+                td = tr.insertCell();
+                td.appendChild(document.createTextNode(data[i].description.toString()));
+                td = tr.insertCell();
+                td.appendChild(document.createTextNode(data[i].commitMessage.toString()));
+                td = tr.insertCell();
+                td.appendChild(document.createTextNode(data[i].blamers.toString()));
+                td = tr.insertCell();
+                var node = document.createTextNode("Not claimed");
+                node.name = "status";
+                td.appendChild(node);
+            }
+            el.appendChild(tbl);
+        }
+
+    </script>
+    <style>
+        /*
+
+       RESPONSTABLE 2.0 by jordyvanraaij
+         Designed mobile first!
+
+       If you like this solution, you might also want to check out the 1.0 version:
+         https://gist.github.com/jordyvanraaij/9069194
+
+       */
+        .responstable {
+            margin: 1em 0;
+            width: 100%;
+            overflow: hidden;
+            background: #FFF;
+            color: #024457;
+            border-radius: 10px;
+            border: 1px solid #167F92;
+        }
+        .responstable tr {
+            border: 1px solid #D9E4E6;
+        }
+        .responstable tr:nth-child(odd) {
+            background-color: #EAF3F3;
+        }
+        .responstable th {
+            display: none;
+            border: 1px solid #FFF;
+            background-color: #167F92;
+            color: #FFF;
+            padding: 1em;
+        }
+        .responstable th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+        .responstable th:nth-child(2) {
+            display: table-cell;
+        }
+        .responstable th:nth-child(2) span {
+            display: none;
+        }
+        .responstable th:nth-child(2):after {
+            content: attr(data-th);
+        }
+        @media (min-width: 480px) {
+            .responstable th:nth-child(2) span {
+                display: block;
+            }
+            .responstable th:nth-child(2):after {
+                display: none;
+            }
+        }
+        .responstable td {
+            display: block;
+            word-wrap: break-word;
+            max-width: 7em;
+        }
+        .responstable td:first-child {
+            display: table-cell;
+            text-align: center;
+            border-right: 1px solid #D9E4E6;
+        }
+        @media (min-width: 480px) {
+            .responstable td {
+                border: 1px solid #D9E4E6;
+            }
+        }
+        .responstable th, .responstable td {
+            text-align: left;
+            margin: .5em 1em;
+        }
+        @media (min-width: 480px) {
+            .responstable th, .responstable td {
+                display: table-cell;
+                padding: 1em;
+            }
+        }
+
+        body {
+            padding: 0 2em;
+            font-family: Arial, sans-serif;
+            color: #024457;
+            background: #f2f2f2;
+        }
+
+        h1 {
+            font-family: Verdana;
+            font-weight: normal;
+            color: #024457;
+        }
+        h1 span {
+            color: #167F92;
+        }
+
+    </style>
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div>
+    <div id="conversationDiv">
+        <p id="response"></p>
+    </div>
+    <div align="right">
+        <button onclick="claim()">Claim Bug</button>
+        <button onclick="openBugzilla()">Open in Bugzilla</button>
+    </div>
+</div>
+</body>
+</html>

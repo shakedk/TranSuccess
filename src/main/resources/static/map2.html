@@ -30,11 +30,10 @@ Next iterations: suggestions:
 	href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
 <script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script>
 <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
-<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <!--<script src="colorbrewer.js"></script>-->
-<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'
-	rel='stylesheet' />
+
 <!--General Styling-->
 <style>
 html, body {
@@ -53,8 +52,7 @@ svg {
 }
 
 path {
-	fill-opacity: 0;
-	stroke-width: 7px;
+	stroke-width: 3px;
 	stroke-opacity: 0.5;
 }
 
@@ -107,6 +105,7 @@ path {
 			//The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).
 			var map = L.map('map').addLayer(mapboxTiles).setView(
 					[ 32.07452, 34.78875 ], 13);
+			var popup = new L.Popup({ autoPan: false });
 			// Initialize the SVG layer
 			map._initPathRoot()
 			// Categorical colors for 2 lines routes and the optional changing station's colors
@@ -114,9 +113,16 @@ path {
 				"areaBorderColor" : "rgb(152,78,163)",
 			};
 			// color used for HeatMap
-			var heatScheme = [ 'rgb(247,252,245)', 'rgb(229,245,224)',
-					'rgb(199,233,192)', 'rgb(161,217,155)', 'rgb(116,196,118)',
-					'rgb(65,171,93)', 'rgb(35,139,69)', 'rgb(0,90,50)' ];
+			var heatScheme =  [ '#800026' ,
+			                    '#bd0026' ,
+			                    '#e31a1c' ,
+			                    '#fc4e2a' ,
+			                   '#fd8d3c' ,
+			                    '#feb24c' ,
+			                   '#fed976' ,
+			                   '#ffeda0' ,
+			                    '#ffffcc' ,
+			                    '#ffffcc' ];
 			//Holds the hues that will be assigned for the waiting time mapping (the station changeStations color).
 			//The actual setting is done after the relevant number of optional changing station is calculated.
 			var stationsHues;
@@ -127,49 +133,80 @@ path {
 			var sAreaStyle = {
 				"fillColor" : mappingColors.areaBorderColor
 			};
+			var areasLayer;
 
-			//Getting the area polygons from the server
-			$.ajax({
-				type : "GET",
-				contentType : "application/json; charset=utf-8",
-				url : 'http://localhost:8080/areas',
-				dataType : 'json',
-				async : true,
-				data : "{}",
-				success : function(data) {
-					//var pos_data = data;
-					draw_areas_on_map(data);
-				},
-				error : function(result) {
-
-				}
-			})
 			draw_areas_on_map = function (data) {
 				
-				L.geoJson(data, {
-						style : getStyle
+				areasLayer = L.geoJson(data, {
+						style : getStyle,
+						onEachFeature: onEachFeature
 					}).addTo(map);
 			}
 			
-			  function getStyle() {
+			  function getStyle(feature) {
 			      return {
-			          weight: 2,
+			          weight: 0.5,
 			          opacity: 0.1,
 			          color: 'black',
 			          fillOpacity: 0.7,
-			          fillColor: getColor(400)
+			          fillColor: getColor(feature.properties.styleHash)
+			        	  //getColor(feature.properties.density)
 			      };
 			  }
 			  // get color depending on population density value
 			  function getColor(d) {
-			      return d > 1000 ? '#8c2d04' :
-			          d > 500  ? '#cc4c02' :
-			          d > 200  ? '#ec7014' :
-			          d > 100  ? '#fe9929' :
-			          d > 50   ? '#fec44f' :
-			          d > 20   ? '#fee391' :
-			          d > 10   ? '#fff7bc' :
-			          '#ffffe5';
+				  var color = 'white'; 
+				  if(d==10) color =  '#800026' ;
+				  if(d==9) color =  '#bd0026' ;
+				  if(d==8) color =  '#e31a1c' ;
+				  if(d==7) color =  '#fc4e2a' ;
+				  if(d==6) color = '#fd8d3c' ;
+				  if(d==5) color =  '#feb24c' ;
+				  if(d==4) color = '#fed976' ;
+				  if(d==3) color = '#ffeda0' ;
+				  if(d==2) color =  '#ffffcc' ;
+				  if(d==1) color =  '#ffffcc' ;
+			      return color;
+				
+			  }
+			  
+			  function onEachFeature(feature, layer) {
+			      layer.on({
+			          mousemove: mousemove,
+			          mouseout: mouseout,
+			          click: zoomToFeature
+			      });
+			  }
+			  var closeTooltip;
+
+			  function mousemove(e) {
+			      var layer = e.target;
+
+			     // popup.setLatLng(e.latlng);
+
+			      if (!popup._map) popup.openOn(map);
+			    //  window.clearTimeout(closeTooltip);
+
+			      // highlight feature
+			      layer.setStyle({
+			          weight: 2,
+			          opacity: 0.3,
+			          fillOpacity: 0.9
+			      });
+			      if (!L.Browser.ie && !L.Browser.opera) {
+			          layer.bringToFront();
+			      }
+			  }
+			  
+			  function mouseout(e) {
+			      areasLayer.resetStyle(e.target);
+			      closeTooltip = window.setTimeout(function() {
+			          map.closePopup();
+			      }, 100);
+			  }
+
+			  function zoomToFeature(e) {
+			      map.fitBounds(e.target.getBounds());
 			  }
 
 			//Adding a legend with sequential horizontal bar for easy access
@@ -180,10 +217,89 @@ path {
 				var div = L.DomUtil.create('div', 'legend');
 				div.innerHTML += '<p style="margin:auto; background: linear-gradient(to right, '
 						+ heatScheme + ')"</p>' + '<br>';
-				div.innerHTML += '<p style="font-weight: bold"> longest waiting &#8596 shortest waiting</p>';
+				div.innerHTML += '<p style="font-weight: bold"> Highest Accessibility &#8596 Lowest Accessibility</p>';
 				return div;
 			};
 			legend.addTo(map);
+			
+			//Adding a legend with sequential horizontal bar for easy access
+			var button = L.control({
+				position : 'topright'
+			});
+			button.onAdd = function(map) {
+				var div = L.DomUtil.create('div', 'legend');
+				div.innerHTML = '<form><input id="command" type="checkbox"/>Add Stations<br><input id="areas" type="checkbox"/>Add Areas</form>'; 
+				return div;
+			};
+			button.addTo(map);
+			// add the event handler
+			function handleCommand() {
+			  // alert("Clicked, checked = " + this.checked);
+				if(this.checked){
+			 	 $.ajax({
+					type : "GET",
+					contentType : "application/json; charset=utf-8",
+					url : 'http://localhost:8080/stations',
+					dataType : 'json',
+					async : true,
+					data : "{}",
+					success : function(data) {
+						//var pos_data = data;
+						draw_stations_on_map(data);
+					},
+					error : function(result) {
+	
+					}
+				})
+				}else{
+					stationLayer.clearLayers();
+				}
+				draw_stations_on_map = function (data) {
+					
+					stationLayer = L.geoJson(data, {
+							style : getMarkerStyle
+						}).addTo(map);
+				}
+				  function getMarkerStyle() {
+				      return {
+				    	  color: 'black',
+				    	  iconUrl: 'none'
+				      };
+				  }
+			}
+			//Adding a legend with sequential horizontal bar for easy access
+			var button = L.control({
+				position : 'topright'
+			});
+
+			// add the event handler
+			function handleAreaCommand() {
+			  // alert("Clicked, checked = " + this.checked);
+				if(this.checked){
+					//Getting the area polygons from the server
+					$.ajax({
+						type : "GET",
+						contentType : "application/json; charset=utf-8",
+						url : 'http://localhost:8080/areas',
+						dataType : 'json',
+						async : true,
+						data : "{}",
+						success : function(data) {
+							//var pos_data = data;
+							draw_areas_on_map(data);
+						},
+						error : function(result) {
+
+						}
+					})
+				} else{
+					areasLayer.clearLayers();
+				}
+			}
+			document.getElementById ("areas").addEventListener ("click", handleAreaCommand, false);
+			document.getElementById ("command").addEventListener ("click", handleCommand, false);
+			
+			
 			//Using SVG, iterating the stations and displaying only the
 			//change stations (in this example there are only 8 stations)
 		</script>

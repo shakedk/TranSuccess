@@ -1,6 +1,7 @@
 package transSuccess.controller;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +27,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import transSuccess.service.PublicApiService;
 import transSuccess.service.TransSuccessService;
 
 @ComponentScan("transSuccess")
@@ -36,12 +36,10 @@ public class TransSuccessController {
 
 	@Autowired
 	TransSuccessService transSuccessService;
-	@Autowired
-	PublicApiService publicApiService;
 
 	@RequestMapping(value = "/areas", method = RequestMethod.GET,
 			produces="application/json")
-	public @ResponseBody String getTelAvivAreas() throws JsonProcessingException {
+	public @ResponseBody String getTelAvivAreas() throws IOException {
 		
 		JsonNode jsonNode = transSuccessService.getTelAvivAreas();
 		return jsonNode.toString();
@@ -58,6 +56,14 @@ public class TransSuccessController {
 
 //		String json = new ObjectMapper().writeValueAsString(featureCollection);
 		return featureCollection;*/
+	}
+	
+	@RequestMapping(value = "/stations", method = RequestMethod.GET,
+			produces="application/json")
+	public @ResponseBody String getTelAvivStations() throws JsonProcessingException {
+		
+		JsonNode jsonNode = transSuccessService.getTelAvivStations();
+		return jsonNode.toString();
 	}
 	
 	@RequestMapping(value = "/areas2", method = RequestMethod.GET,
