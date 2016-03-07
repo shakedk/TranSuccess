@@ -1,9 +1,9 @@
 package transSuccess.repository;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.geojson.FeatureCollection;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,12 +31,13 @@ public class FilesRepository {
 	
 	private JsonNode getFileFromPath(String path){
 	     // JSONParser parser = new JSONParser();
-	   	ClassLoader classLoader = getClass().getClassLoader();
-	   	File file = new File(classLoader.getResource(path).getFile());
+//	   	ClassLoader classLoader = getClass().getClassLoader();
+//	   	File file = new File(classLoader.getResource(path).getFile());
+	   	Resource resource = new ClassPathResource(path);
 	   	ObjectMapper m = new ObjectMapper();
 	   	JsonNode rootNode = null;
 			try {
-				rootNode = m.readTree(file);				
+				rootNode = m.readTree(resource.getFile());				
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

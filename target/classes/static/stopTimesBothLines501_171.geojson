@@ -1,0 +1,1865 @@
+{
+   "type": "FeatureCollection",
+   "features": [
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.794496,32.09503 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:48:13",
+    "DEPARTURE_TIME":"07:48:13",
+    "STOP_ID":13067,
+    "STOP_CODE":21415,
+    "STOP_NAME":"דרך נמיר/יהודה המכבי",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.79496,32.124668 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:52:40",
+    "DEPARTURE_TIME":"07:52:40",
+    "STOP_ID":13134,
+    "STOP_CODE":21532,
+    "STOP_NAME":"דרך נמיר/שד' קק''ל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.795498,32.086373 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:46:13",
+    "DEPARTURE_TIME":"07:46:13",
+    "STOP_ID":13154,
+    "STOP_CODE":21564,
+    "STOP_NAME":"דרך נמיר/ז’בוטינסקי",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.849175,32.167137 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:23:40",
+    "DEPARTURE_TIME":"08:23:40",
+    "STOP_ID":13160,
+    "STOP_CODE":21571,
+    "STOP_NAME":"מגן דוד אדום/סוקולוב",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.795205,32.092013 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:47:13",
+    "DEPARTURE_TIME":"07:47:13",
+    "STOP_ID":13181,
+    "STOP_CODE":21615,
+    "STOP_NAME":"דרך נמיר/פנקס",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.827849,32.163289 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:06:40",
+    "DEPARTURE_TIME":"08:06:40",
+    "STOP_ID":13189,
+    "STOP_CODE":21628,
+    "STOP_NAME":"הרב קוק/שדרות שבעת הכוכבים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.79162,32.075712 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:44:00",
+    "DEPARTURE_TIME":"07:44:00",
+    "STOP_ID":13204,
+    "STOP_CODE":21669,
+    "STOP_NAME":"קניון עזריאלי/דרך בגין",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.795097,32.083641 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:46:00",
+    "DEPARTURE_TIME":"07:46:00",
+    "STOP_ID":13354,
+    "STOP_CODE":24068,
+    "STOP_NAME":"מסוף 2000/דרך נמיר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.792127,32.109248 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:50:40",
+    "DEPARTURE_TIME":"07:50:40",
+    "STOP_ID":13760,
+    "STOP_CODE":25985,
+    "STOP_NAME":"קאנטרי ל/דרך נמיר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.839959,32.166987 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:13:40",
+    "DEPARTURE_TIME":"08:13:40",
+    "STOP_ID":14286,
+    "STOP_CODE":26901,
+    "STOP_NAME":"סוקולוב/הניצנים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.842559,32.166686 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:15:40",
+    "DEPARTURE_TIME":"08:15:40",
+    "STOP_ID":14289,
+    "STOP_CODE":26904,
+    "STOP_NAME":"קניון לב העיר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.852972,32.169563 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:26:40",
+    "DEPARTURE_TIME":"08:26:40",
+    "STOP_ID":14294,
+    "STOP_CODE":26909,
+    "STOP_NAME":"דרך ירושלים/יגאל אלון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.85169,32.175159 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:29:40",
+    "DEPARTURE_TIME":"08:29:40",
+    "STOP_ID":14296,
+    "STOP_CODE":26911,
+    "STOP_NAME":"ירושלים/הבריגדה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.817618,32.160805 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:00:40",
+    "DEPARTURE_TIME":"08:00:40",
+    "STOP_ID":14366,
+    "STOP_CODE":27105,
+    "STOP_NAME":"מחלף שבעת הכוכבים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.830953,32.162839 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:07:40",
+    "DEPARTURE_TIME":"08:07:40",
+    "STOP_ID":14367,
+    "STOP_CODE":27107,
+    "STOP_NAME":"בית אבות/הרב קוק",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.834846,32.16292 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:10:40",
+    "DEPARTURE_TIME":"08:10:40",
+    "STOP_ID":14368,
+    "STOP_CODE":27108,
+    "STOP_NAME":"וייצמן/הרב קוק",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.812005,32.160137 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:58:40",
+    "DEPARTURE_TIME":"07:58:40",
+    "STOP_ID":14394,
+    "STOP_CODE":27145,
+    "STOP_NAME":"מחלף הסירה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.854953,32.184743 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:36:40",
+    "DEPARTURE_TIME":"08:36:40",
+    "STOP_ID":24239,
+    "STOP_CODE":36600,
+    "STOP_NAME":"בית לוינשטיין/אחוזה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.858228,32.184037 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:37:40",
+    "DEPARTURE_TIME":"08:37:40",
+    "STOP_ID":24250,
+    "STOP_CODE":36611,
+    "STOP_NAME":"אחוזה/עציון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.861866,32.183228 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:39:40",
+    "DEPARTURE_TIME":"08:39:40",
+    "STOP_ID":24252,
+    "STOP_CODE":36613,
+    "STOP_NAME":"אחוזה/המלכים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.864764,32.182592 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:41:40",
+    "DEPARTURE_TIME":"08:41:40",
+    "STOP_ID":24254,
+    "STOP_CODE":36615,
+    "STOP_NAME":"אחוזה/מגדל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.868255,32.181829 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:42:40",
+    "DEPARTURE_TIME":"08:42:40",
+    "STOP_ID":24420,
+    "STOP_CODE":37053,
+    "STOP_NAME":"אחוזה/מוצקין",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.871078,32.181194 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:44:40",
+    "DEPARTURE_TIME":"08:44:40",
+    "STOP_ID":24421,
+    "STOP_CODE":37054,
+    "STOP_NAME":"אחוזה/בן גוריון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.87461,32.180412 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:46:40",
+    "DEPARTURE_TIME":"08:46:40",
+    "STOP_ID":24424,
+    "STOP_CODE":37057,
+    "STOP_NAME":"אחוזה/אליעזר יפה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.877988,32.179666 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:48:40",
+    "DEPARTURE_TIME":"08:48:40",
+    "STOP_ID":24426,
+    "STOP_CODE":37059,
+    "STOP_NAME":"אחוזה/הגליל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.883084,32.178534 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:50:40",
+    "DEPARTURE_TIME":"08:50:40",
+    "STOP_ID":24428,
+    "STOP_CODE":37061,
+    "STOP_NAME":"אחוזה/רבוצקי",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.890741,32.175758 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:55:40",
+    "DEPARTURE_TIME":"08:55:40",
+    "STOP_ID":24928,
+    "STOP_CODE":37861,
+    "STOP_NAME":"מסוף צומת רעננה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.784812,32.061294 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:42:00",
+    "DEPARTURE_TIME":"07:42:00",
+    "STOP_ID":29310,
+    "STOP_CODE":20004,
+    "STOP_NAME":"המסגר/יד חרוצים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.787249,32.067786 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:43:00",
+    "DEPARTURE_TIME":"07:43:00",
+    "STOP_ID":29322,
+    "STOP_CODE":20026,
+    "STOP_NAME":"המסגר/בן אביגדור",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.792745,32.103496 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:50:13",
+    "DEPARTURE_TIME":"07:50:13",
+    "STOP_ID":29339,
+    "STOP_CODE":20050,
+    "STOP_NAME":"דרך נמיר/חיים לבנון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.792777,32.113247 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:51:40",
+    "DEPARTURE_TIME":"07:51:40",
+    "STOP_ID":29340,
+    "STOP_CODE":20051,
+    "STOP_NAME":"דרך נמיר/איינשטיין",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.798586,32.136871 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:54:40",
+    "DEPARTURE_TIME":"07:54:40",
+    "STOP_ID":29371,
+    "STOP_CODE":20096,
+    "STOP_NAME":"מכללת לוינסקי/דרך נמיר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.801761,32.14144 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:55:40",
+    "DEPARTURE_TIME":"07:55:40",
+    "STOP_ID":29385,
+    "STOP_CODE":20118,
+    "STOP_NAME":"מחלף גלילות מערב",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"TRUE",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.803713,32.147643 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:56:40",
+    "DEPARTURE_TIME":"07:56:40",
+    "STOP_ID":29390,
+    "STOP_CODE":20124,
+    "STOP_NAME":"סינמה סיטי/כביש 2",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.82403,32.163327 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:04:40",
+    "DEPARTURE_TIME":"08:04:40",
+    "STOP_ID":29416,
+    "STOP_CODE":20172,
+    "STOP_NAME":"קניון שבעת הכוכבים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.835713,32.164872 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:11:40",
+    "DEPARTURE_TIME":"08:11:40",
+    "STOP_ID":29538,
+    "STOP_CODE":20415,
+    "STOP_NAME":"בית ספר וייצמן/וייצמן",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.843385,32.164513 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"08:17:40",
+    "DEPARTURE_TIME":"08:17:40",
+    "STOP_ID":37417,
+    "STOP_CODE":28661,
+    "STOP_NAME":"תחנה מרכזית הרצליה/הורדה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.779424,32.055818 ]
+    },
+    "properties": {
+    "TRIP_ID":"17529279_080815",
+    "ARRIVAL_TIME":"07:40:00",
+    "DEPARTURE_TIME":"07:40:00",
+    "STOP_ID":37685,
+    "STOP_CODE":21256,
+    "STOP_NAME":"תחנה מרכזית תל אביב קומה 6/רציפים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.784812,32.061294 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:47:19",
+    "DEPARTURE_TIME":"07:47:19",
+    "STOP_ID":29310,
+    "STOP_CODE":20004,
+    "STOP_NAME":"המסגר/יד חרוצים",
+    "WAIT_TIME":"00:05:19",
+    "WAIT_RANK":1,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.79162,32.075712 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:52:19",
+    "DEPARTURE_TIME":"07:52:19",
+    "STOP_ID":13204,
+    "STOP_CODE":21669,
+    "STOP_NAME":"קניון עזריאלי/דרך בגין",
+    "WAIT_TIME":"00:08:19",
+    "WAIT_RANK":2,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.795097,32.083641 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:55:19",
+    "DEPARTURE_TIME":"07:55:19",
+    "STOP_ID":13354,
+    "STOP_CODE":24068,
+    "STOP_NAME":"מסוף 2000/דרך נמיר",
+    "WAIT_TIME":"00:09:19",
+    "WAIT_RANK":3,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.795498,32.086373 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:56:19",
+    "DEPARTURE_TIME":"07:56:19",
+    "STOP_ID":13154,
+    "STOP_CODE":21564,
+    "STOP_NAME":"דרך נמיר/ז’בוטינסקי",
+    "WAIT_TIME":"00:10:06",
+    "WAIT_RANK":4,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.794496,32.09503 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:58:34",
+    "DEPARTURE_TIME":"07:58:34",
+    "STOP_ID":13067,
+    "STOP_CODE":21415,
+    "STOP_NAME":"דרך נמיר/יהודה המכבי",
+    "WAIT_TIME":"00:10:21",
+    "WAIT_RANK":5,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.795205,32.092013 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:58:19",
+    "DEPARTURE_TIME":"07:58:19",
+    "STOP_ID":13181,
+    "STOP_CODE":21615,
+    "STOP_NAME":"דרך נמיר/פנקס",
+    "WAIT_TIME":"00:11:06",
+    "WAIT_RANK":6,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.792745,32.103496 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:01:34",
+    "DEPARTURE_TIME":"08:01:34",
+    "STOP_ID":29339,
+    "STOP_CODE":20050,
+    "STOP_NAME":"דרך נמיר/חיים לבנון",
+    "WAIT_TIME":"00:11:21",
+    "WAIT_RANK":7,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.792127,32.109248 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:03:34",
+    "DEPARTURE_TIME":"08:03:34",
+    "STOP_ID":13760,
+    "STOP_CODE":25985,
+    "STOP_NAME":"קאנטרי ל/דרך נמיר",
+    "WAIT_TIME":"00:12:54",
+    "WAIT_RANK":8,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.78977,32.071436 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:51:19",
+    "DEPARTURE_TIME":"07:51:19",
+    "STOP_ID":12932,
+    "STOP_CODE":21221,
+    "STOP_NAME":"גשר קלקא/דרך בגין",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802653,32.106452 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:09:45",
+    "DEPARTURE_TIME":"08:09:45",
+    "STOP_ID":12944,
+    "STOP_CODE":21235,
+    "STOP_NAME":"קמפוס ברושים/ד''ר ג'ורג' וייז",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.80153,32.110208 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:07:45",
+    "DEPARTURE_TIME":"08:07:45",
+    "STOP_ID":13050,
+    "STOP_CODE":21387,
+    "STOP_NAME":"חיים לבנון/ד''ר ג'ורג' וייז",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.80138,32.108604 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:08:45",
+    "DEPARTURE_TIME":"08:08:45",
+    "STOP_ID":13118,
+    "STOP_CODE":21498,
+    "STOP_NAME":"מכון התקנים/חיים לבנון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.801363,32.112655 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:07:34",
+    "DEPARTURE_TIME":"08:07:34",
+    "STOP_ID":13126,
+    "STOP_CODE":21513,
+    "STOP_NAME":"האוניברסיטה/חיים לבנון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.784408,32.04788 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:43:19",
+    "DEPARTURE_TIME":"07:43:19",
+    "STOP_ID":13178,
+    "STOP_CODE":21609,
+    "STOP_NAME":"חיל השריון/קיבוץ גלויות",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.807491,32.111325 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:12:45",
+    "DEPARTURE_TIME":"08:12:45",
+    "STOP_ID":13202,
+    "STOP_CODE":21665,
+    "STOP_NAME":"הפקולטה להנדסה/קלאוזנר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.783502,32.055233 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:45:19",
+    "DEPARTURE_TIME":"07:45:19",
+    "STOP_ID":13601,
+    "STOP_CODE":25636,
+    "STOP_NAME":"חיל השריון/ההגנה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.816549,31.883645 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:44:00",
+    "DEPARTURE_TIME":"06:44:00",
+    "STOP_ID":15431,
+    "STOP_CODE":31094,
+    "STOP_NAME":"הרצל/צומת-אושיות",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.814646,31.885923 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:44:07",
+    "DEPARTURE_TIME":"06:44:07",
+    "STOP_ID":15432,
+    "STOP_CODE":31095,
+    "STOP_NAME":"הרצל/יעקב-מדהלה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.814022,31.887272 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:45:07",
+    "DEPARTURE_TIME":"06:45:07",
+    "STOP_ID":15433,
+    "STOP_CODE":31096,
+    "STOP_NAME":"הרצל/בר-כוכבא",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.812978,31.890289 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:46:07",
+    "DEPARTURE_TIME":"06:46:07",
+    "STOP_ID":15434,
+    "STOP_CODE":31097,
+    "STOP_NAME":"הרצל/עזרא",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.812032,31.893079 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:47:07",
+    "DEPARTURE_TIME":"06:47:07",
+    "STOP_ID":15435,
+    "STOP_CODE":31098,
+    "STOP_NAME":"הרצל/רוטרי",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.807991,32.019078 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:30:19",
+    "DEPARTURE_TIME":"07:30:19",
+    "STOP_ID":15563,
+    "STOP_CODE":31251,
+    "STOP_NAME":"דרך השבעה/קפלן",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.805505,32.021799 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:31:19",
+    "DEPARTURE_TIME":"07:31:19",
+    "STOP_ID":15564,
+    "STOP_CODE":31252,
+    "STOP_NAME":"דרך השבעה/המלאכה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"TRUE",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.798082,31.926599 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:58:07",
+    "DEPARTURE_TIME":"06:58:07",
+    "STOP_ID":15611,
+    "STOP_CODE":31327,
+    "STOP_NAME":"וייצמן/נורדאו",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.798884,31.929679 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:59:07",
+    "DEPARTURE_TIME":"06:59:07",
+    "STOP_ID":15612,
+    "STOP_CODE":31328,
+    "STOP_NAME":"וייצמן/הבנים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.800163,31.937247 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:02:07",
+    "DEPARTURE_TIME":"07:02:07",
+    "STOP_ID":15613,
+    "STOP_CODE":31329,
+    "STOP_NAME":"ויצמן/מרגולין",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802562,31.959794 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:09:07",
+    "DEPARTURE_TIME":"07:09:07",
+    "STOP_ID":15616,
+    "STOP_CODE":31332,
+    "STOP_NAME":"הרצל/אהרון קרון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.807102,31.973994 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:13:19",
+    "DEPARTURE_TIME":"07:13:19",
+    "STOP_ID":15625,
+    "STOP_CODE":31342,
+    "STOP_NAME":"דרך המכבים/פיק''א",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.810634,31.897746 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:48:07",
+    "DEPARTURE_TIME":"06:48:07",
+    "STOP_ID":16062,
+    "STOP_CODE":32116,
+    "STOP_NAME":"הרצל/וייצמן",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.809763,31.900199 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:49:07",
+    "DEPARTURE_TIME":"06:49:07",
+    "STOP_ID":16063,
+    "STOP_CODE":32117,
+    "STOP_NAME":"משטרה/הרצל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.809581,31.981352 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:16:19",
+    "DEPARTURE_TIME":"07:16:19",
+    "STOP_ID":16824,
+    "STOP_CODE":32947,
+    "STOP_NAME":"דרך המכבים/שדרות הציונות",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802347,32.02445 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:32:19",
+    "DEPARTURE_TIME":"07:32:19",
+    "STOP_ID":21475,
+    "STOP_CODE":33287,
+    "STOP_NAME":"דרך השבעה/הרצל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802269,31.957502 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:08:07",
+    "DEPARTURE_TIME":"07:08:07",
+    "STOP_ID":21507,
+    "STOP_CODE":33326,
+    "STOP_NAME":"הרצל/סוקולוב",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.820514,32.002455 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:23:19",
+    "DEPARTURE_TIME":"07:23:19",
+    "STOP_ID":21595,
+    "STOP_CODE":33440,
+    "STOP_NAME":"צומת בית דגן",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802538,31.912524 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:53:07",
+    "DEPARTURE_TIME":"06:53:07",
+    "STOP_ID":21675,
+    "STOP_CODE":33581,
+    "STOP_NAME":"ויצמן/פארק המדע",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.807467,31.904094 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:50:07",
+    "DEPARTURE_TIME":"06:50:07",
+    "STOP_ID":22259,
+    "STOP_CODE":34230,
+    "STOP_NAME":"מכון ויצמן",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.806067,31.906494 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:51:07",
+    "DEPARTURE_TIME":"06:51:07",
+    "STOP_ID":22260,
+    "STOP_CODE":34231,
+    "STOP_NAME":"הפקולטה לחקלאות",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.805296,31.908282 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:52:07",
+    "DEPARTURE_TIME":"06:52:07",
+    "STOP_ID":22261,
+    "STOP_CODE":34232,
+    "STOP_NAME":"הרצל/אופנהיימר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.814678,31.881977 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:42:00",
+    "DEPARTURE_TIME":"06:42:00",
+    "STOP_ID":22998,
+    "STOP_CODE":34977,
+    "STOP_NAME":"יעקבי/הרצל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.813067,31.880502 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:41:00",
+    "DEPARTURE_TIME":"06:41:00",
+    "STOP_ID":23649,
+    "STOP_CODE":35799,
+    "STOP_NAME":"יצחק בנארי/בוסתן",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.816103,31.878782 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:38:00",
+    "DEPARTURE_TIME":"06:38:00",
+    "STOP_ID":23651,
+    "STOP_CODE":35801,
+    "STOP_NAME":"שמחה הולצברג/בית ספר בן גוריון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.805183,31.969914 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:12:19",
+    "DEPARTURE_TIME":"07:12:19",
+    "STOP_ID":24666,
+    "STOP_CODE":37506,
+    "STOP_NAME":"הרצל/בן זאב",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.796875,32.028909 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:34:19",
+    "DEPARTURE_TIME":"07:34:19",
+    "STOP_ID":24738,
+    "STOP_CODE":37604,
+    "STOP_NAME":"דרך השבעה/המכתש",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802806,31.966374 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:11:19",
+    "DEPARTURE_TIME":"07:11:19",
+    "STOP_ID":24755,
+    "STOP_CODE":37624,
+    "STOP_NAME":"הרצל/תרמ''ב",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.802666,31.954773 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:07:07",
+    "DEPARTURE_TIME":"07:07:07",
+    "STOP_ID":24767,
+    "STOP_CODE":37639,
+    "STOP_NAME":"הרצל/אבי האסירים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.803154,31.962424 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:09:19",
+    "DEPARTURE_TIME":"07:09:19",
+    "STOP_ID":24768,
+    "STOP_CODE":37644,
+    "STOP_NAME":"הרצל/הכרמל",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.810773,31.984731 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:17:19",
+    "DEPARTURE_TIME":"07:17:19",
+    "STOP_ID":25107,
+    "STOP_CODE":38144,
+    "STOP_NAME":"נחלת יהודה ב",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.815195,31.994441 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:20:19",
+    "DEPARTURE_TIME":"07:20:19",
+    "STOP_ID":25128,
+    "STOP_CODE":38165,
+    "STOP_NAME":"מכון וולקני/דרך המכבים",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.813927,31.878874 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:40:00",
+    "DEPARTURE_TIME":"06:40:00",
+    "STOP_ID":25370,
+    "STOP_CODE":38470,
+    "STOP_NAME":"יצחק בנארי/שמחה הולצברג",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.807595,32.113563 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:12:56",
+    "DEPARTURE_TIME":"08:12:56",
+    "STOP_ID":29399,
+    "STOP_CODE":20138,
+    "STOP_NAME":"בית התפוצות/קלאוזנר",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.803417,32.117526 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:15:55",
+    "DEPARTURE_TIME":"08:15:55",
+    "STOP_ID":29410,
+    "STOP_CODE":20158,
+    "STOP_NAME":"אוניברסיטה איצטדיון",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.786787,32.066453 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"07:49:19",
+    "DEPARTURE_TIME":"07:49:19",
+    "STOP_ID":29483,
+    "STOP_CODE":20356,
+    "STOP_NAME":"המסגר/יצחק שדה",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.806315,32.117491 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:14:55",
+    "DEPARTURE_TIME":"08:14:55",
+    "STOP_ID":29588,
+    "STOP_CODE":20503,
+    "STOP_NAME":"ביה''ס לרפואה/קלצ’קין",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.798492,32.113009 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"08:06:34",
+    "DEPARTURE_TIME":"08:06:34",
+    "STOP_ID":29681,
+    "STOP_CODE":20597,
+    "STOP_NAME":"אינשטיין/ברודצקי",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 34.816349,31.877379 ]
+    },
+    "properties": {
+    "TRIP_ID":"4633412_080815",
+    "ARRIVAL_TIME":"06:39:00",
+    "DEPARTURE_TIME":"06:39:00",
+    "STOP_ID":34059,
+    "STOP_CODE":38751,
+    "STOP_NAME":"קרוננברג/לשם",
+    "WAIT_TIME":"",
+    "WAIT_RANK":null,
+    "IS_ORIGIN":"",
+    "IS_DEST":"",
+    "LINE_NUM":171
+    }
+  }
+]
+}
