@@ -10,11 +10,16 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DAL {
 
@@ -35,9 +40,26 @@ public class DAL {
 		//Assigning each station(hour) the ranking position in comparison to the hours in that station
 		HashMap<Integer, int[]> frequencyRatingPerStation = getRankedFrequency(frequencyPerStation);
 		//Calculating the hourly deltas between hours per station. e.g. between hour 6AM to 7AM there was a rise of 10 busses
-		HashMap<Integer, int[]> frequencyDeltasPerStation = getFrequencydeltas(frequencyPerStation);
-		writeDataToCSV(frequencyPerStation);
+		HashMap<Integer, int[]> frequencyDeltasPerStation = getFrequencydeltas(frequencyRatingPerStation);
+		writeDataToCSV(frequencyDeltasPerStation);
 		System.out.println("Finito!");
+	}
+
+	private static HashMap<Integer, int[]> getFrequencydeltas(HashMap<Integer, int[]> frequencyPerStation) {
+		Iterator<Entry<Integer, int[]>> it = frequencyPerStation.entrySet().iterator();
+		 HashMap<Integer, int[]> result = new HashMap<>();
+		while (it.hasNext()){
+			 @SuppressWarnings("unchecked")
+			Entry<Integer, int[]> next = it.next();
+			int[] freqRanks = next.getValue();
+			int[] deltas = new int[freqRanks.length];
+			for (int i = 0; i < deltas.length-1; i++) {
+				deltas[i] = freqRanks[i+1]-freqRanks[i];
+			}
+			deltas[23] = -1;
+			result.put(next.getKey(),deltas);
+		}
+		return result;
 	}
 
 	/**
@@ -50,12 +72,22 @@ public class DAL {
 		 HashMap<Integer, int[]> result = new HashMap<>();
 		while (it.hasNext()){
 			 @SuppressWarnings("unchecked")
-			HashMap<Integer, int[]>  stationFreq = ( HashMap<Integer, int[]> ) it.next();
-			
+			Entry<Integer, int[]> next = it.next();
+			int[] values = next.getValue();			
+			List<Integer> integetValues  = Arrays.stream( values ).boxed().collect( Collectors.toList() );
+			Set<Integer> uniqueNumbers = new HashSet<Integer>(integetValues);
+			List<Integer> uniqueNumbersList = new ArrayList<Integer>(); 
+			uniqueNumbersList.addAll(uniqueNumbers);
+			int[] ranks = new int[values.length];
+			for (int i = 0; i < ranks.length; i++) {
+				ranks[i] = uniqueNumbersList.indexOf(values[i]);
+			}
+			result.put(next.getKey(), ranks);
 		}
-		return null;
+		return result;
 	}
 
+	
 	private static void writeDataToCSV(HashMap<Integer, int[]> frequencyPerStation) {
 		Date date = new Date();
 		DateFormat formatter = new SimpleDateFormat("ddMMyy__HH_mm_ss");
@@ -110,8 +142,8 @@ public class DAL {
 			int stopID = stopsIDs.get(j);
 			frequency = new int[24];
 			for (int i = 0; i < hours.length; i++) {
-//				query = "select count(*) from (select route_id,arrival_time,stop_id from stop_times JOIN trips JOIN calendar where calendar.service_id=trips.service_id AND calendar.sunday='TRUE' and stop_id='"+stopID+"' and arrival_time like '"+hours[i]+":%' and stop_times.trip_id=trips.trip_id group by  route_id,arrival_time,stop_id)";
-				query = "select count(*) from (select distinct route_id from stop_times JOIN trips JOIN calendar where calendar.service_id=trips.service_id AND calendar.sunday='TRUE' and stop_id='"+stopID+"'and stop_times.trip_id=trips.trip_id group by route_id,arrival_time,stop_id)";
+				query = "select count(*) from (select route_id,arrival_time,stop_id from stop_times JOIN trips JOIN calendar where calendar.service_id=trips.service_id AND calendar.sunday='TRUE' and stop_id='"+stopID+"' and arrival_time like '"+hours[i]+":%' and stop_times.trip_id=trips.trip_id group by  route_id,arrival_time,stop_id)";
+//				query = "select count(*) from (select distinct route_id from stop_times JOIN trips JOIN calendar where calendar.service_id=trips.service_id AND calendar.sunday='TRUE' and stop_id='"+stopID+"'and stop_times.trip_id=trips.trip_id group by route_id,arrival_time,stop_id)";
 
 				try {
 					ps = conn.prepareStatement(query);

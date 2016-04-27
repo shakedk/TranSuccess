@@ -3,7 +3,7 @@ Implementation-Title: btc_e.server
 Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: shakedk
 Implementation-Vendor-Id: btc_e.server
-Build-Jdk: 1.8.0_66
+Build-Jdk: 1.8.0_77
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
 
