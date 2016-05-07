@@ -62,6 +62,9 @@ public class TransSuccessService {
 	public JsonNode getTelAvivStations(){
 		return filesRepository.getTelAvivStations();
 	}
+	public String getsubIndicesDataForJSON() {
+		return filesRepository.getsubIndicesDataForJSON();
+	}
 	
 	
 }

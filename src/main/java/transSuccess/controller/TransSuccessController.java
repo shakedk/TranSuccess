@@ -31,6 +31,13 @@ public class TransSuccessController {
 	@Autowired
 	TransSuccessService transSuccessService;
 
+	@RequestMapping(value = "/subIndicesDataForJSON", method = RequestMethod.GET,
+			produces="application/csv")
+	public @ResponseBody String getsubIndicesDataForJSONCSV() throws IOException {		
+		String string = transSuccessService.getsubIndicesDataForJSON();
+		return string;
+	}
+	
 	@RequestMapping(value = "/areas", method = RequestMethod.GET,
 			produces="application/json")
 	public @ResponseBody String getTelAvivAreas() throws IOException {
