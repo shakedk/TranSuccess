@@ -31,6 +31,7 @@ Next iterations: suggestions:
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 <script src="http://d3js.org/d3.v3.js" type="text/javascript"></script>
+
 <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
 <script
 	src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
@@ -94,9 +95,28 @@ path {
 </head>
 
 <body>
+	<div id="parallelCoords" class="parcoords"
+		style="width: 1500px; height: 500px">
 
+		<p>
+			<label for="sltBrushMode">Brush mode:</label> <select
+				id="sltBrushMode">
+			</select> <label id="lblPredicate" for="sltPredicate">Predicate:</label> <select
+				id="sltPredicate">
+				<option>AND</option>
+				<option>OR</option>
+			</select>
+			<button id="btnReset">Reset Brushes</button>
+		</p>
+
+		<script type="text/javascript">
+			
+		</script>
+	</div>
 	<div id="map">
 		<script type="text/javascript">
+			//place holder for the parallel-coordinates draw
+			var parcoords;
 			//Importing the mapbox tiles layer. For our purposes, the example map is sufficient
 			var mapboxTiles = L
 					.tileLayer(
@@ -110,7 +130,7 @@ path {
 			//The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).
 			var map = L.map('map').addLayer(mapboxTiles).setView(
 					[ 32.07452, 34.78875 ], 13);
-			// var popup = new L.Popup({ autoPan: false });
+			var popup = new L.Popup({ autoPan: false });
 			// Initialize the SVG layer
 			map._initPathRoot()
 			// Categorical colors for 2 lines routes and the optional changing station's colors
@@ -181,23 +201,24 @@ path {
 
 			function onEachFeature(feature, layer) {
 				layer.on({
-					mousemove : mousemove,
+					mousemove : mousemove,					
 					mouseout : mouseout,
-				//click: zoomToFeature,
+					click: highlightpaarCooedCurve (feature),
 				// text: feature.properties.areaId
 				});
-				layer.bindPopup("Area: " + feature.properties.Name);
+				//layer.bindPopup("Area: " + feature.properties.Name);				
 			}
 			var closeTooltip;
 
 			function mousemove(e) {
 				var layer = e.target;
 
-				// popup.setLatLng(e.latlng);
+			      popup.setLatLng(e.latlng);
+			      popup.setContent('<div class="marker-title">Area ID: ' + layer.feature.properties.Name+ '</div>');
 
-				//  if (!popup._map) popup.openOn(map);
-				//  window.clearTimeout(closeTooltip);
-
+			      if (!popup._map) popup.openOn(map);
+			      window.clearTimeout(closeTooltip);
+			      
 				// highlight feature
 				layer.setStyle({
 					weight : 2,
@@ -253,7 +274,7 @@ path {
 						data : "{}",
 						success : function(data) {
 							//var pos_data = data;
-							draw_stations_on_map(data);
+							draw_stations_on_map(data);							
 						},
 						error : function(result) {
 
@@ -311,46 +332,115 @@ path {
 
 			//Using SVG, iterating the stations and displaying only the
 			//change stations (in this example there are only 8 stations)
-		</script>
-	</div>
 
-	<div id="parallelCoords" class="parcoords"
-		style="width: 1200px; height: 500px">
-		<script type="text/javascript">
-			$( document ).ready(function() {
-			draw_par_coords();
+			$(document).ready(function() {
+				draw_par_coords();
 			});
 			// load csv file and create the chart
 
+			draw_par_coords = function() {
+				var colors = d3.scale.category20b();
+				d3.csv('http://localhost:8080/subIndicesDataForJSON', function(
+						data) {
+					var colorgen = d3.scale.ordinal()
+							.range(
+									[ "#a6cee3", "#1f78b4", "#b2df8a",
+											"#33a02c", "#fb9a99", "#e31a1c",
+											"#fdbf6f", "#ff7f00", "#cab2d6",
+											"#6a3d9a", "#ffff99", "#b15928" ]);
 
-			draw_par_coords = function(	) {
-				var colors = d3.scale.category20b(); 
-				d3.csv('http://localhost:8080/subIndicesDataForJSON', function(data) {
-					  var colorgen = d3.scale.ordinal()
-					    .range(["#a6cee3","#1f78b4","#b2df8a","#33a02c",
-					            "#fb9a99","#e31a1c","#fdbf6f","#ff7f00",
-					            "#cab2d6","#6a3d9a","#ffff99","#b15928"]);
+					var color = function(d) {
+						return colors((d.SE) / 10);
+					};
 
-					  var color = function(d) { return colors(d.group); };
+					parcoords = d3.parcoords()("#parallelCoords").data(data)
+							.hideAxis([ "name" ]).color(color).alpha(0.25)
+							.render().shadows().reorderable().composite(
+									"darken").margin({
+								top : 24,
+								left : 150,
+								bottom : 12,
+								right : 0
+							}).mode("queue").render().brushMode("1D-axes"); // enable brushing
 
-					  var parcoords = d3.parcoords()("#parallelCoords")
-					    .data(data)
-					    .hideAxis(["name"])
-					    .color(color)
-					    .alpha(0.25)
-					    .composite("darken")
-					    .margin({ top: 24, left: 150, bottom: 12, right: 0 })
-					    .mode("queue")
-					    .render()
-					    .brushMode("1D-axes");  // enable brushing
+					parcoords.svg.selectAll("text").style("font",
+							"20px sans-serif");
 
-					  parcoords.svg.selectAll("text")
-					    .style("font", "10px sans-serif");
+					var sltBrushMode = d3.select('#sltBrushMode')
+					sltBrushMode.selectAll('option').data(
+							parcoords.brushModes()).enter().append('option')
+							.text(function(d) {
+								return d;
+							});
+
+					sltBrushMode.on('change',
+							function() {
+								parcoords.brushMode(this.value);
+								switch (this.value) {
+								case 'None':
+									d3.select("#pStrums").style("visibility",
+											"hidden");
+									d3.select("#lblPredicate").style(
+											"visibility", "hidden");
+									d3.select("#sltPredicate").style(
+											"visibility", "hidden");
+									d3.select("#btnReset").style("visibility",
+											"hidden");
+									break;
+								case '2D-strums':
+									d3.select("#pStrums").style("visibility",
+											"visible");
+									break;
+								default:
+									d3.select("#pStrums").style("visibility",
+											"hidden");
+									d3.select("#lblPredicate").style(
+											"visibility", "visible");
+									d3.select("#sltPredicate").style(
+											"visibility", "visible");
+									d3.select("#btnReset").style("visibility",
+											"visible");
+									break;
+								}
+							});
+					d3.select('#btnReset').on('click', function() {
+						parcoords.brushReset();
+					})
+					d3.select('#sltPredicate').on('change', function() {
+						parcoords.brushPredicate(this.value);
 					});
+				});
 			};
+			
+			highlightpaarCooedCurve = function(e) {
+				map.fitBounds(e.target.getBounds());
+				
+				  // create data table, row hover highlighting				  
+/*				    d3.select("#map")
+				    .datum(data.slice(0,10))
+				    .call(grid)
+				    .selectAll(".row")
+				    .on({
+				      "mouseover": function(d) { parcoords.highlight([d]) },
+				      "mouseout": parcoords.unhighlight
+				    });
 
+				  // update data table on brush event
+				  parcoords.on("brush", function(d) {
+				    d3.select("#grid")
+				      .datum(d.slice(0,10))
+				      .call(grid)
+				      .selectAll(".row")
+				      .on({
+				        "mouseover": function(d) { parcoords.highlight([d]) },
+				        "mouseout": parcoords.unhighlight
+				      });
+				  });
+				  */
+			};
 		</script>
 	</div>
+
 </body>
 
 </html>
