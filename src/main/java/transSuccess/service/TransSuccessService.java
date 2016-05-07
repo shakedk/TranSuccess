@@ -1,9 +1,7 @@
 package transSuccess.service;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
@@ -27,15 +25,18 @@ public class TransSuccessService {
 	FilesRepository filesRepository;
 	
 	public JsonNode getTelAvivAreas() throws JsonParseException, JsonMappingException, IOException{
-		return modifyRanks(filesRepository.getTelAvivAreas());
+		return modifyAreaIndices(filesRepository.getTelAvivAreas());
 	}
 	public JsonNode getAreasRanks() throws JsonParseException, JsonMappingException, IOException{
 		return filesRepository.getAreaRanks();
 	}
-	private JsonNode modifyRanks(JsonNode file) throws JsonParseException, JsonMappingException, IOException{
+	public JsonNode getSubIndices()  throws JsonParseException, JsonMappingException, IOException{
+		return filesRepository.getSubIndices();
+	}
+	
+	private JsonNode modifyAreaIndices(JsonNode file) throws JsonParseException, JsonMappingException, IOException{
 		ObjectMapper m = new ObjectMapper();
 		JsonNode jsonAreasRanks = getAreasRanks();
-		//List<AreaRank> areaRanks = m.readValue(file.toString(), AreaRank.class);
 		List<AreaRank> areaRanks = m.readValue(jsonAreasRanks.toString(), new TypeReference<List<AreaRank>>(){});
 		
 		FeatureCollection featureCollection = m.readValue(file.toString(), FeatureCollection.class);
@@ -49,24 +50,18 @@ public class TransSuccessService {
 				if(Integer.parseInt(id)==rankId){
 					double rank = areaRank.getRank();
 					feature.setProperty("styleHash", rank);
+					feature.setProperty("Name", id);
 				}
 			}
 			
 		}
-/*		for(int i=0; i < features.size() ; i++){
-			//Feature feature = features.get(i);
-			//Feature feature = features.getProperty("Description");
-			AreaRank areaRank = areaRanks.get(i);
-			double rank = areaRank.getRank();
-			feature.setProperty("styleHash", rank);
-		}*/
 		JsonNode node = m.convertValue(featureCollection, JsonNode.class);
-
 		return node;
 	}
 	
 	public JsonNode getTelAvivStations(){
 		return filesRepository.getTelAvivStations();
 	}
+	
 	
 }

@@ -1,14 +1,9 @@
 package transSuccess.controller;
 
-import java.awt.Point;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.http.HttpResponse;
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.geojson.GeoJsonObject;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import transSuccess.service.TransSuccessService;
 
@@ -43,19 +37,6 @@ public class TransSuccessController {
 		
 		JsonNode jsonNode = transSuccessService.getTelAvivAreas();
 		return jsonNode.toString();
-		
-/*		FeatureCollection featureCollection = new FeatureCollection();
-		Feature feature = new Feature();
-		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("line", new String("171"));
-		feature.setProperties(properties);
-		GeoJsonObject geometry = new LineString(new LngLatAlt(34.816089, 31.878739),
-				new LngLatAlt(34.817235, 31.878499), new LngLatAlt(34.817211, 31.878308));
-		feature.setGeometry(geometry);
-		featureCollection.add(feature);
-
-//		String json = new ObjectMapper().writeValueAsString(featureCollection);
-		return featureCollection;*/
 	}
 	
 	@RequestMapping(value = "/stations", method = RequestMethod.GET,

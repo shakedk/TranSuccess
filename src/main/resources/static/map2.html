@@ -105,7 +105,7 @@ path {
 			//The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).
 			var map = L.map('map').addLayer(mapboxTiles).setView(
 					[ 32.07452, 34.78875 ], 13);
-			var popup = new L.Popup({ autoPan: false });
+			// var popup = new L.Popup({ autoPan: false });
 			// Initialize the SVG layer
 			map._initPathRoot()
 			// Categorical colors for 2 lines routes and the optional changing station's colors
@@ -139,7 +139,7 @@ path {
 				
 				areasLayer = L.geoJson(data, {
 						style : getStyle,
-						onEachFeature: onEachFeature
+						onEachFeature: onEachFeature,
 					}).addTo(map);
 			}
 			
@@ -149,8 +149,7 @@ path {
 			          opacity: 0.1,
 			          color: 'black',
 			          fillOpacity: 0.7,
-			          fillColor: getColor(feature.properties.styleHash)
-			        	  //getColor(feature.properties.density)
+			          fillColor: getColor(feature.properties.styleHash),
 			      };
 			  }
 			  // get color depending on population density value
@@ -166,6 +165,7 @@ path {
 				  if(d==3) color = '#ffeda0' ;
 				  if(d==2) color =  '#ffffcc' ;
 				  if(d==1) color =  '#ffffcc' ;
+				  if(d<1)  color =  '#830CFA'
 			      return color;
 				
 			  }
@@ -174,8 +174,10 @@ path {
 			      layer.on({
 			          mousemove: mousemove,
 			          mouseout: mouseout,
-			          click: zoomToFeature
+			          //click: zoomToFeature,
+			         // text: feature.properties.areaId
 			      });
+			      layer.bindPopup("Area: " + feature.properties.Name);
 			  }
 			  var closeTooltip;
 
@@ -184,7 +186,7 @@ path {
 
 			     // popup.setLatLng(e.latlng);
 
-			      if (!popup._map) popup.openOn(map);
+			    //  if (!popup._map) popup.openOn(map);
 			    //  window.clearTimeout(closeTooltip);
 
 			      // highlight feature
@@ -200,9 +202,9 @@ path {
 			  
 			  function mouseout(e) {
 			      areasLayer.resetStyle(e.target);
-			      closeTooltip = window.setTimeout(function() {
-			          map.closePopup();
-			      }, 100);
+		//	      closeTooltip = window.setTimeout(function() {
+			   //      map.closePopup();
+		//	      }, 100);
 			  }
 
 			  function zoomToFeature(e) {

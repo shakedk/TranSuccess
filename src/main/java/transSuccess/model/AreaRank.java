@@ -1,10 +1,5 @@
 package transSuccess.model;
 
-import java.sql.Timestamp;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AreaRank {

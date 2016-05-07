@@ -18,6 +18,7 @@ public class FilesRepository {
 	private static final String AREAS_PATH = "static/tel_aviv_areas2.json";
 	private static final String STATION_PATH = "static/stations.geojson";
 	private static final String AREA_RANKS_PATH = "static/AreaRanks.json";
+	private static final String AREA_SUB_INDICES = "static/AreaSubIndices.json";
 	
 	public JsonNode getTelAvivAreas(){
 		return getFileFromPath(AREAS_PATH);
@@ -28,6 +29,10 @@ public class FilesRepository {
 	public JsonNode getAreaRanks(){
 		return getFileFromPath(AREA_RANKS_PATH);
 	}	
+	
+	public JsonNode getSubIndices() {
+		return getFileFromPath(AREA_SUB_INDICES);
+	}
 	
 	private JsonNode getFileFromPath(String path){
 	     // JSONParser parser = new JSONParser();
@@ -47,5 +52,6 @@ public class FilesRepository {
 			}
 	   	return rootNode;
 	}
+
 	
 }
