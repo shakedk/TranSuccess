@@ -96,7 +96,7 @@ path {
 
 <body>
 	<div id="parallelCoords" class="parcoords"
-		style="width: 1500px; height: 500px">
+		style="width: 1500px; height: 400px">
 
 		<p>
 			<label for="sltBrushMode">Brush mode:</label> <select
@@ -117,6 +117,7 @@ path {
 		<script type="text/javascript">
 			//place holder for the parallel-coordinates draw
 			var parcoords;
+			var parCoordData;
 			//Importing the mapbox tiles layer. For our purposes, the example map is sufficient
 			var mapboxTiles = L
 					.tileLayer(
@@ -130,7 +131,9 @@ path {
 			//The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).
 			var map = L.map('map').addLayer(mapboxTiles).setView(
 					[ 32.07452, 34.78875 ], 13);
-			var popup = new L.Popup({ autoPan: false });
+			var popup = new L.Popup({
+				autoPan : false
+			});
 			// Initialize the SVG layer
 			map._initPathRoot()
 			// Categorical colors for 2 lines routes and the optional changing station's colors
@@ -201,24 +204,29 @@ path {
 
 			function onEachFeature(feature, layer) {
 				layer.on({
-					mousemove : mousemove,					
+					mousemove : mousemove,
 					mouseout : mouseout,
-					click: highlightpaarCooedCurve (feature),
-				// text: feature.properties.areaId
+					//click : highlightPCCurve,
+					text : feature.properties.areaId
 				});
 				//layer.bindPopup("Area: " + feature.properties.Name);				
 			}
 			var closeTooltip;
 
 			function mousemove(e) {
+				parcoords.highlight(parCoordData.filter(function(d) {
+					return d.areaId === e.target.feature.properties.Name;
+				}));
 				var layer = e.target;
 
-			      popup.setLatLng(e.latlng);
-			      popup.setContent('<div class="marker-title">Area ID: ' + layer.feature.properties.Name+ '</div>');
+				popup.setLatLng(e.latlng);
+				popup.setContent('<div class="marker-title">Area ID: '
+						+ layer.feature.properties.Name + '</div>');
 
-			      if (!popup._map) popup.openOn(map);
-			      window.clearTimeout(closeTooltip);
-			      
+				if (!popup._map)
+					popup.openOn(map);
+				window.clearTimeout(closeTooltip);
+
 				// highlight feature
 				layer.setStyle({
 					weight : 2,
@@ -232,6 +240,7 @@ path {
 
 			function mouseout(e) {
 				areasLayer.resetStyle(e.target);
+				parcoords.unhighlight;
 			}
 
 			function zoomToFeature(e) {
@@ -274,7 +283,7 @@ path {
 						data : "{}",
 						success : function(data) {
 							//var pos_data = data;
-							draw_stations_on_map(data);							
+							draw_stations_on_map(data);
 						},
 						error : function(result) {
 
@@ -342,6 +351,7 @@ path {
 				var colors = d3.scale.category20b();
 				d3.csv('http://localhost:8080/subIndicesDataForJSON', function(
 						data) {
+					parCoordData = data;
 					var colorgen = d3.scale.ordinal()
 							.range(
 									[ "#a6cee3", "#1f78b4", "#b2df8a",
@@ -411,33 +421,7 @@ path {
 					});
 				});
 			};
-			
-			highlightpaarCooedCurve = function(e) {
-				map.fitBounds(e.target.getBounds());
-				
-				  // create data table, row hover highlighting				  
-/*				    d3.select("#map")
-				    .datum(data.slice(0,10))
-				    .call(grid)
-				    .selectAll(".row")
-				    .on({
-				      "mouseover": function(d) { parcoords.highlight([d]) },
-				      "mouseout": parcoords.unhighlight
-				    });
 
-				  // update data table on brush event
-				  parcoords.on("brush", function(d) {
-				    d3.select("#grid")
-				      .datum(d.slice(0,10))
-				      .call(grid)
-				      .selectAll(".row")
-				      .on({
-				        "mouseover": function(d) { parcoords.highlight([d]) },
-				        "mouseout": parcoords.unhighlight
-				      });
-				  });
-				  */
-			};
 		</script>
 	</div>
 
