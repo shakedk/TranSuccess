@@ -37,7 +37,7 @@ Next iterations: suggestions:
 	src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script src="divgrid.js"></script>
+
 
 
 
@@ -61,7 +61,6 @@ html, body {
 	width: 600px;
 	height: 100%;
 }
-
 
 svg {
 	position: relative;
@@ -87,7 +86,8 @@ path {
 
 .lineStations {
 	fill-opacity: 0;
-	stroke-opacity: 0;;
+	stroke-opacity: 0;
+	;
 }
 
 .legend {
@@ -124,7 +124,7 @@ path {
 	<div id="map">
 		<script type="text/javascript">
 			//place holder for the parallel-coordinates draw
-			var host = "5.102.230.126"//localhost;
+			var host = "localhost"; //"5.102.230.126"
 			var parcoords;
 			var parCoordData;
 			//Importing the mapbox tiles layer. For our purposes, the example map is sufficient
@@ -160,14 +160,13 @@ path {
 			// We pick up the SVG from the map object
 			var svg = d3.select(map.getPanes().overlayPane).append("svg"), g = svg
 					.append("g").attr("class", "leaflet-zoom-hide");
-			//Styling variables used for the routes path layer
+			//Styling variables used areas border
 			var sAreaStyle = {
 				"fillColor" : mappingColors.areaBorderColor
 			};
 			var areasLayer;
 
 			draw_areas_on_map = function(data) {
-
 				areasLayer = L.geoJson(data, {
 					style : getStyle,
 					onEachFeature : onEachFeature
@@ -177,12 +176,20 @@ path {
 			function getStyle(feature) {
 				return {
 					weight : 0.5,
-					opacity : 0.1,
+					opacity : 0.5,
 					color : 'black',
 					fillOpacity : 0.7,
 					fillColor : getColor(feature.properties.styleHash),
 				};
 			}
+			
+			//Reapint Areas back to default paint
+			function rePaintAreas() {
+				areasLayer.eachLayer(function (layer) {
+					layer.setStyle(getStyle(layer.feature));
+				});				
+			}
+			
 			// get color depending on population density value
 			function getColor(d) {
 				var color = 'white';
@@ -212,9 +219,9 @@ path {
 			}
 
 			function onEachFeature(feature, layer) {
-				var areaId = feature.properties.areaId
-				layer._polygonId = areaId;
-				layer.on({					
+				var areaId = feature.properties.Name;
+				layer._leaflet_id = areaId;
+				layer.on({
 					mousemove : mousemove,
 					mouseout : mouseout,
 					text : areaId
@@ -288,7 +295,7 @@ path {
 					$.ajax({
 						type : "GET",
 						contentType : "application/json; charset=utf-8",
-						url : 'http://'+host+'/:8080/stations',
+						url : 'http://' + host + '/:8080/stations',
 						dataType : 'json',
 						async : true,
 						data : "{}",
@@ -304,11 +311,11 @@ path {
 					stationLayer.clearLayers();
 				}
 				draw_stations_on_map = function(data) {
-
 					stationLayer = L.geoJson(data, {
 						style : getMarkerStyle
 					}).addTo(map);
 				}
+
 				function getMarkerStyle() {
 					return {
 						color : 'black',
@@ -323,13 +330,12 @@ path {
 
 			// add the event handler
 			function handleAreaCommand() {
-				// alert("Clicked, checked = " + this.checked);
 				if (this.checked) {
 					//Getting the area polygons from the server
 					$.ajax({
 						type : "GET",
 						contentType : "application/json; charset=utf-8",
-						url : 'http://'+host+':8080/areas',
+						url : 'http://' + host + ':8080/areas',
 						dataType : 'json',
 						async : true,
 						data : "{}",
@@ -360,74 +366,88 @@ path {
 
 			draw_par_coords = function() {
 				var colors = d3.scale.category20b();
-				d3.csv('http://'+host+':8080/subIndicesDataForJSON', function(
-						data) {
-					parCoordData = data;
-					var colorgen = d3.scale.ordinal()
-							.range(
+				d3.csv('http://' + host + ':8080/subIndicesDataForJSON',
+						function(data) {
+							parCoordData = data;
+							var colorgen = d3.scale.ordinal().range(
 									[ "#a6cee3", "#1f78b4", "#b2df8a",
 											"#33a02c", "#fb9a99", "#e31a1c",
 											"#fdbf6f", "#ff7f00", "#cab2d6",
 											"#6a3d9a", "#ffff99", "#b15928" ]);
 
-					var color = function(d) {
-						var color = 'white';
-						//Setting color by STAI measure
-						d = Math.floor(d.STAI);
-						if (d == 10)
-							color = '#800026';
-						if (d == 9)
-							color = '#bd0026';
-						if (d == 8)
-							color = '#e31a1c';
-						if (d == 7)
-							color = '#fc4e2a';
-						if (d == 6)
-							color = '#fd8d3c';
-						if (d == 5)
-							color = '#feb24c';
-						if (d == 4)
-							color = '#fed976';
-						if (d == 3)
-							color = '#ffeda0';
-						if (d == 2)
-							color = '#ffffcc';
-						if (d <= 1)
-							color = '#ffffcc';
-						if (d == -1)
-							color = '#830CFA'
-						return color;
-						//return colors((d.SE) / 10);
-						//return getColor(d);
-					};
+							var color = function(d) {
+								var color = 'white';
+								//Setting color by STAI measure
+								d = Math.floor(d.STAI);
+								if (d == 10)
+									color = '#800026';
+								if (d == 9)
+									color = '#bd0026';
+								if (d == 8)
+									color = '#e31a1c';
+								if (d == 7)
+									color = '#fc4e2a';
+								if (d == 6)
+									color = '#fd8d3c';
+								if (d == 5)
+									color = '#feb24c';
+								if (d == 4)
+									color = '#fed976';
+								if (d == 3)
+									color = '#ffeda0';
+								if (d == 2)
+									color = '#ffffcc';
+								if (d <= 1)
+									color = '#ffffcc';
+								if (d == -1)
+									color = '#830CFA'
+								return color;
+								//return colors((d.SE) / 10);
+								//return getColor(d);
+							};
 
-					parcoords = d3.parcoords()("#parallelCoords").data(data)
-							.hideAxis([ "name" ]).color(color).alpha(0.25)
-							.render().shadows().reorderable().composite(
-									"darken").margin({
-								top : 24,
-								left : 150,
-								bottom : 12,
-								right : 0
-							}).mode("queue").render().brushMode("1D-axes"); // enable brushing
+							parcoords = d3.parcoords()("#parallelCoords").data(
+									data).hideAxis([ "name" ]).color(color)
+									.alpha(0.7).render().shadows()
+									.reorderable().composite("darken").margin({
+										top : 24,
+										left : 150,
+										bottom : 12,
+										right : 0
+									}).mode("queue").render().brushMode(
+											"1D-axes"); // enable brushing
 
-					parcoords.svg.selectAll("text").style("font",
-							"20px sans-serif");
-							
-/*					  // update map hightlight brush event
-					  parcoords.on("brush", function(d) {						  
-						  map.setHighlighted(areasLayer, doesRelate(layer._polygonId, selectedId));
-					  });*/
+							parcoords.svg.selectAll("text").style("font",
+									"20px sans-serif");
 
-					var sltBrushMode = d3.select('#sltBrushMode')
-					sltBrushMode.selectAll('option').data(
-							parcoords.brushModes()).enter().append('option')
-							.text(function(d) {
+							// update map hightlight brush event
+							parcoords.on("brush", function(d) {
+								//areasLayer.eachLayer(function(layer) {
+								/*setHighlighted(layer, doesRelate(
+										layer._polygonId, selectedId));*/
+								//});
+								//map.setHighlighted(areasLayer.doesRelate(layer._polygonId, selectedId));
+								if (areasLayer) {
+									//Making the entire layer more transperent
+									areasLayer.setStyle({
+										fillOpacity : 0.2,
+									});
+									d.forEach(function(polygon) {
+										selectPolygon = areasLayer
+												.getLayer(polygon.areaId);
+										setAreaHighlighted(selectPolygon);
+									});
+								}
+							});
+
+							var sltBrushMode = d3.select('#sltBrushMode')
+							sltBrushMode.selectAll('option').data(
+									parcoords.brushModes()).enter().append(
+									'option').text(function(d) {
 								return d;
 							});
 
-					sltBrushMode.on('change',
-							function() {
+							sltBrushMode.on('change', function() {
 								parcoords.brushMode(this.value);
 								switch (this.value) {
 								case 'None':
@@ -456,13 +476,14 @@ path {
 									break;
 								}
 							});
-					d3.select('#btnReset').on('click', function() {
-						parcoords.brushReset();
-					})
-					d3.select('#sltPredicate').on('change', function() {
-						parcoords.brushPredicate(this.value);
-					});
-				});
+							d3.select('#btnReset').on('click', function() {
+								parcoords.brushReset();
+								rePaintAreas();
+							})
+							d3.select('#sltPredicate').on('change', function() {
+								parcoords.brushPredicate(this.value);
+							});
+						});
 			};
 
 			//Highlight the cooresponding line in the PC chart
@@ -471,11 +492,229 @@ path {
 					return d.areaId === e.target.feature.properties.Name;
 				}));
 			};
+
+			setAreaHighlighted = function(polygon) {
+				polygon.setStyle({
+					fillOpacity : 1,
+					borderColor : 'pink'
+				});
+			};
+
+			///////////////////////////////HIGHILIGHT PAAr/////////////////////////////
+
+			//add hover event
+			d3.select("#parallelCoords svg").on("mousemove", function() {
+				var mousePosition = d3.mouse(this);
+				highlightLineOnClick(mousePosition, true); //true will also add tooltip
+			}).on("mouseout", function() {
+				cleanTooltip();
+				parcoords.unhighlight();
+			});
+
+			// update color and font weight of chart based on axis selection
+			// modified from here: https://syntagmatic.github.io/parallel-coordinates/
+			function update_colors(dimension) {
+				// change the fonts to bold
+				parcoords.svg.selectAll(".dimension").style("font-weight",
+						"normal").filter(function(d) {
+					return d == dimension;
+				}).style("font-weight", "bold");
+
+				// change color of lines
+				// set domain of color scale
+				var values = parcoords.data().map(function(d) {
+					return parseFloat(d[dimension])
+				});
+				color_set.domain([ d3.min(values), d3.max(values) ]);
+
+				// change colors for each line
+				parcoords.color(function(d) {
+					return color_set([ d[dimension] ])
+				}).render();
+			};
+
+			// Add highlight for every line on click
+			function getCentroids(data) {
+				// this function returns centroid points for data. I had to change the source
+				// for parallelcoordinates and make compute_centroids public.
+				// I assume this should be already somewhere in graph and I don't need to recalculate it
+				// but I couldn't find it so I just wrote this for now
+				var margins = parcoords.margin();
+				var graphCentPts = [];
+
+				data.forEach(function(d) {
+
+					var initCenPts = parcoords.compute_centroids(d).filter(
+							function(d, i) {
+								return i % 2 == 0;
+							});
+
+					// move points based on margins
+					var cenPts = initCenPts
+							.map(function(d) {
+								return [ d[0] + margins["left"],
+										d[1] + margins["top"] ];
+							});
+
+					graphCentPts.push(cenPts);
+				});
+
+				return graphCentPts;
+			}
+
+			function getActiveData() {
+				// I'm pretty sure this data is already somewhere in graph
+				if (parcoords.brushed() != false)
+					return parcoords.brushed();
+				return parcoords.data();
+			}
+
+			function isOnLine(startPt, endPt, testPt, tol) {
+				// check if test point is close enough to a line
+				// between startPt and endPt. close enough means smaller than tolerance
+				var x0 = testPt[0];
+				var y0 = testPt[1];
+				var x1 = startPt[0];
+				var y1 = startPt[1];
+				var x2 = endPt[0];
+				var y2 = endPt[1];
+				var Dx = x2 - x1;
+				var Dy = y2 - y1;
+				var delta = Math.abs(Dy * x0 - Dx * y0 - x1 * y2 + x2 * y1)
+						/ Math.sqrt(Math.pow(Dx, 2) + Math.pow(Dy, 2));
+				//console.log(delta);
+				if (delta <= tol)
+					return true;
+				return false;
+			}
+
+			function findAxes(testPt, cenPts) {
+				// finds between which two axis the mouse is
+				var x = testPt[0];
+				var y = testPt[1];
+
+				// make sure it is inside the range of x
+				if (cenPts[0][0] > x)
+					return false;
+				if (cenPts[cenPts.length - 1][0] < x)
+					return false;
+
+				// find between which segment the point is
+				for (var i = 0; i < cenPts.length; i++) {
+					if (cenPts[i][0] > x)
+						return i;
+				}
+			}
+
+			function cleanTooltip() {
+				// removes any object under #tooltip is
+				parcoords.svg.selectAll("#tooltip").remove();
+			}
+
+			function addTooltip(clicked, clickedCenPts) {
+
+				// sdd tooltip to multiple clicked lines
+				var clickedDataSet = [];
+				var margins = parcoords.margin()
+
+				// get all the values into a single list
+				// I'm pretty sure there is a better way to write this is Javascript
+				for (var i = 0; i < clicked.length; i++) {
+					for (var j = 0; j < clickedCenPts[i].length; j++) {
+						var text = d3.values(clicked[i])[j];
+						// not clean at all!
+						var x = clickedCenPts[i][j][0] - margins.left;
+						var y = clickedCenPts[i][j][1] - margins.top;
+						clickedDataSet.push([ x, y, text ]);
+					}
+				}
+				;
+
+				// add rectangles
+				var fontSize = 14;
+				var padding = 2;
+				var rectHeight = fontSize + 2 * padding; //based on font size
+
+				parcoords.svg.selectAll("rect[id='tooltip']").data(
+						clickedDataSet).enter().append("rect").attr("x",
+						function(d) {
+							return d[0] - d[2].length * 5;
+						}).attr("y", function(d) {
+					return d[1] - rectHeight + 2 * padding;
+				}).attr("rx", "2").attr("ry", "2").attr("id", "tooltip").attr(
+						"fill", "grey").attr("opacity", 0.9).attr("width",
+						function(d) {
+							return d[2].length * 10;
+						}).attr("height", rectHeight);
+
+				// add text on top of rectangle
+				parcoords.svg.selectAll("text[id='tooltip']").data(
+						clickedDataSet).enter().append("text").attr("x",
+						function(d) {
+							return d[0];
+						}).attr("y", function(d) {
+					return d[1];
+				}).attr("id", "tooltip").attr("fill", "white").attr(
+						"text-anchor", "middle").attr("font-size", fontSize)
+						.text(function(d) {
+							return d[2];
+						})
+			}
+
+			function getClickedLines(mouseClick) {
+				var clicked = [];
+				var clickedCenPts = [];
+
+				// find which data is activated right now
+				var activeData = getActiveData();
+
+				// find centriod points
+				var graphCentPts = getCentroids(activeData);
+
+				if (graphCentPts.length == 0)
+					return false;
+
+				// find between which axes the point is
+				var axeNum = findAxes(mouseClick, graphCentPts[0]);
+				if (!axeNum)
+					return false;
+
+				graphCentPts.forEach(function(d, i) {
+					if (isOnLine(d[axeNum - 1], d[axeNum], mouseClick, 2)) {
+						clicked.push(activeData[i]);
+						clickedCenPts.push(graphCentPts[i]); // for tooltip
+					}
+				});
+
+				return [ clicked, clickedCenPts ]
+			}
+
+			function highlightLineOnClick(mouseClick, drawTooltip) {
+
+				var clicked = [];
+				var clickedCenPts = [];
+
+				clickedData = getClickedLines(mouseClick);
+
+				if (clickedData && clickedData[0].length != 0) {
+
+					clicked = clickedData[0];
+					clickedCenPts = clickedData[1];
+
+					// highlight clicked line
+					parcoords.highlight(clicked);
+
+					if (drawTooltip) {
+						// clean if anything is there
+						cleanTooltip();
+						// add tooltip
+						addTooltip(clicked, clickedCenPts);
+					}
+
+				}
+			};
 		</script>
 	</div>
-
-
-
 
 </body>
 
