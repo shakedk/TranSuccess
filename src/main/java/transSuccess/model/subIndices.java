@@ -9,7 +9,7 @@ public class subIndices {
 	private int populationCount;
 	private double statisticalAreaFrequencies;
 	private double areaMedianIncome;
-	private double socialEconomicIndex;
+	//private double socialEconomicIndex;
 	//STAI = ocioeconomic Transit Availability Index
 	private double stai;
 	
@@ -20,7 +20,7 @@ public class subIndices {
 				 @JsonProperty("populationCount") int populationCount,
 				 @JsonProperty("statisticalAreaFrequencies") double statisticalAreaFrequencies,
 				 @JsonProperty("areaMedianIncome") double areaMedianIncome,
-				 @JsonProperty("socialEconomicIndex") double socialEconomicIndex,
+			//	 @JsonProperty("socialEconomicIndex") double socialEconomicIndex,
 				@JsonProperty("stai") double stai){
 		this.areaId = area_id;		
 		this.numberOfStopsInArea = numberOfStopsInArea;
@@ -28,7 +28,7 @@ public class subIndices {
 		this.populationCount = populationCount;
 		this.statisticalAreaFrequencies = statisticalAreaFrequencies;
 		this.areaMedianIncome = areaMedianIncome;
-		this.socialEconomicIndex = socialEconomicIndex;
+	//	this.socialEconomicIndex = socialEconomicIndex;
 		this.stai = stai;
 	}
 	public int getArea_id() {
@@ -56,12 +56,12 @@ public class subIndices {
 	public void setStatisticalAreaFrequencies(double statisticalAreaFrequencies) {
 		this.statisticalAreaFrequencies = statisticalAreaFrequencies;
 	}
-	public double getSocialEconomicIndex() {
-		return socialEconomicIndex;
-	}
-	public void setSocialEconomicIndex(double socialEconomicIndex) {
-		this.socialEconomicIndex = socialEconomicIndex;
-	}
+//	public double getSocialEconomicIndex() {
+//		return socialEconomicIndex;
+//	}
+//	public void setSocialEconomicIndex(double socialEconomicIndex) {
+//		this.socialEconomicIndex = socialEconomicIndex;
+//	}
 	public double getAreaMedianIncome() {
 		return areaMedianIncome;
 	}

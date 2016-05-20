@@ -24,7 +24,7 @@ Next iterations: suggestions:
 	href="http://cdn.leafletjs.com/leaflet-1.0.0-b1/leaflet.css" />
 <link rel="stylesheet" type="text/css"
 	href="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.css">
-
+<!-- /resources/shaked.parcoords.css -->
 <head>
 
 <!--Script imports-->
@@ -35,6 +35,7 @@ Next iterations: suggestions:
 <script src="http://cdn.leafletjs.com/leaflet-1.0.0-b1/leaflet.js"></script>
 <script
 	src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
+<!-- http://shakedk.github.io/d3.parcoords.js -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
@@ -54,7 +55,7 @@ html, body {
 	/*width: 800 px;*/
 	flex: 1;
 	flex-wrap: wrap;
-	height: 80%
+	height: 80%;
 }
 
 #map {
@@ -125,7 +126,7 @@ path {
 		<script type="text/javascript">
 			//place holder for the parallel-coordinates draw
 			var host = "localhost"; //"5.102.230.126"
-			var parcoords;
+			var parcoords = d3.parcoords()("#parallelCoords");
 			var parCoordData;
 			//Importing the mapbox tiles layer. For our purposes, the example map is sufficient
 			var mapboxTiles = L
@@ -150,10 +151,12 @@ path {
 			var mappingColors = {
 				"areaBorderColor" : "rgb(152,78,163)",
 			};
-			// color used for HeatMap
-			var heatScheme = [ '#800026', '#bd0026', '#e31a1c', '#fc4e2a',
-					'#fd8d3c', '#feb24c', '#fed976', '#ffeda0', '#ffffcc',
-					'#ffffcc' ];
+			// colors used for PC & Map
+			var colors = ['#276419','#4d9221','#7fbc41','#b8e186','#e6f5d0','#fde0ef','#f1b6da','#de77ae','#c51b7d','#8e0152'];
+						 
+			
+			var irrelevantcolor = "white";
+
 			//Holds the hues that will be assigned for the waiting time mapping (the station changeStations color).
 			//The actual setting is done after the relevant number of optional changing station is calculated.
 			var stationsHues;
@@ -173,50 +176,35 @@ path {
 				}).addTo(map);
 			}
 
+			var color = function(d) {			
+				if (d > 0 && d <= colors.length) {
+					return colors[d];
+				}
+				else if (d < 0){
+				return irrelevantcolor ;
+				}
+				else return "orange";
+				//Something is bad with colors
+			};
+			
 			function getStyle(feature) {
 				return {
 					weight : 0.5,
 					opacity : 0.5,
 					color : 'black',
 					fillOpacity : 0.7,
-					fillColor : getColor(feature.properties.styleHash),
+					fillColor : color(feature.properties.styleHash),
 				};
 			}
-			
+
 			//Reapint Areas back to default paint
 			function rePaintAreas() {
-				areasLayer.eachLayer(function (layer) {
+				areasLayer.eachLayer(function(layer) {
 					layer.setStyle(getStyle(layer.feature));
-				});				
+				});
 			}
-			
-			// get color depending on population density value
-			function getColor(d) {
-				var color = 'white';
-				if (d == 10)
-					color = '#800026';
-				if (d == 9)
-					color = '#bd0026';
-				if (d == 8)
-					color = '#e31a1c';
-				if (d == 7)
-					color = '#fc4e2a';
-				if (d == 6)
-					color = '#fd8d3c';
-				if (d == 5)
-					color = '#feb24c';
-				if (d == 4)
-					color = '#fed976';
-				if (d == 3)
-					color = '#ffeda0';
-				if (d == 2)
-					color = '#ffffcc';
-				if (d <= 1)
-					color = '#ffffcc';
-				if (d == -1)
-					color = '#830CFA'
-				return color;
-			}
+
+
 
 			function onEachFeature(feature, layer) {
 				var areaId = feature.properties.Name;
@@ -272,7 +260,7 @@ path {
 			legend.onAdd = function(map) {
 				var div = L.DomUtil.create('div', 'legend');
 				div.innerHTML += '<p style="margin:auto; background: linear-gradient(to right, '
-						+ heatScheme + ')"</p>' + '<br>';
+						+ colors + ')"</p>' + '<br>';
 				div.innerHTML += '<p style="font-weight: bold"> Highest Accessibility &#8596 Lowest Accessibility</p>';
 				return div;
 			};
@@ -365,51 +353,68 @@ path {
 			// load csv file and create the chart
 
 			draw_par_coords = function() {
-				var colors = d3.scale.category20b();
+				//TODO: Needs to use this coloring and not array
+				//var colors = d3.scale.category20b();
 				d3.csv('http://' + host + ':8080/subIndicesDataForJSON',
 						function(data) {
 							parCoordData = data;
-							var colorgen = d3.scale.ordinal().range(
-									[ "#a6cee3", "#1f78b4", "#b2df8a",
-											"#33a02c", "#fb9a99", "#e31a1c",
-											"#fdbf6f", "#ff7f00", "#cab2d6",
-											"#6a3d9a", "#ffff99", "#b15928" ]);
+							//var colorgen = d3.scale.ordinal().range(colors);
+							
+							//creating a SQRT scale							
+							var sqrtScale = function(columName) {
+								range = parcoords.height()
+										- parcoords.margin().top
+										- parcoords.margin().bottom;
+								min = d3.min(data, function(d) {
+									return parseInt(d[columName]);
+								});
+								max = d3.max(data, function(d) {
+									return parseFloat(d[columName]);
+								});
+								return d3.scale.sqrt().domain([ min, max ])
+										.range([ range, 1 ]);
+							}
 
-							var color = function(d) {
-								var color = 'white';
-								//Setting color by STAI measure
-								d = Math.floor(d.STAI);
-								if (d == 10)
-									color = '#800026';
-								if (d == 9)
-									color = '#bd0026';
-								if (d == 8)
-									color = '#e31a1c';
-								if (d == 7)
-									color = '#fc4e2a';
-								if (d == 6)
-									color = '#fd8d3c';
-								if (d == 5)
-									color = '#feb24c';
-								if (d == 4)
-									color = '#fed976';
-								if (d == 3)
-									color = '#ffeda0';
-								if (d == 2)
-									color = '#ffffcc';
-								if (d <= 1)
-									color = '#ffffcc';
-								if (d == -1)
-									color = '#830CFA'
-								return color;
-								//return colors((d.SE) / 10);
-								//return getColor(d);
+							var dimensions = {
+								"AreaID" : {
+									title : 'Area ID',
+								},
+								"Stops" : {
+									title : 'Number of Stops',
+									yscale : sqrtScale('Stops'),
+								},
+								"Area" : {
+									title : 'Area (km^2)',
+									yscale : sqrtScale('Area'),
+								},
+								"Population" : {
+									title : 'Population',
+									yscale : sqrtScale('Population'),
+								},
+								"Areas Average Frequencies" : {
+									title : 'Average Freq.',
+								},
+								"Median Income" : {
+									title : 'Median Income',
+								},
+								"STAI" : {
+									title : 'STAI',
+								},
+								"AreadID" : {
+									title : 'shaked8',
+								},
 							};
 
-							parcoords = d3.parcoords()("#parallelCoords").data(
-									data).hideAxis([ "name" ]).color(color)
-									.alpha(0.7).render().shadows()
-									.reorderable().composite("darken").margin({
+							var pcColor = function (d) {
+								return color(Math.floor(d.STAI));
+							}
+							//Filtering out business areas, that it STAI = -1
+							data = data.filter(function(d) { return parseFloat(d.STAI) > -1})
+							parcoords.data(data).hideAxis([ "name" ]).color(
+									pcColor).dimensions(dimensions)
+									.detectDimensions().render().alpha(0.7)
+									.render().shadows().reorderable()
+									.composite("darken").margin({
 										top : 24,
 										left : 150,
 										bottom : 12,
@@ -434,7 +439,7 @@ path {
 									});
 									d.forEach(function(polygon) {
 										selectPolygon = areasLayer
-												.getLayer(polygon.areaId);
+												.getLayer(polygon.AreaID);
 										setAreaHighlighted(selectPolygon);
 									});
 								}
@@ -496,223 +501,223 @@ path {
 			setAreaHighlighted = function(polygon) {
 				polygon.setStyle({
 					fillOpacity : 1,
-					borderColor : 'pink'
+				//					borderColor : 'pink'
 				});
 			};
 
 			///////////////////////////////HIGHILIGHT PAAr/////////////////////////////
+			/*
+			 //add hover event
+			 d3.select("#parallelCoords svg").on("mousemove", function() {
+			 var mousePosition = d3.mouse(this);
+			 highlightLineOnClick(mousePosition, true); //true will also add tooltip
+			 }).on("mouseout", function() {
+			 cleanTooltip();
+			 parcoords.unhighlight();
+			 });
 
-			//add hover event
-			d3.select("#parallelCoords svg").on("mousemove", function() {
-				var mousePosition = d3.mouse(this);
-				highlightLineOnClick(mousePosition, true); //true will also add tooltip
-			}).on("mouseout", function() {
-				cleanTooltip();
-				parcoords.unhighlight();
-			});
+			 // update color and font weight of chart based on axis selection
+			 // modified from here: https://syntagmatic.github.io/parallel-coordinates/
+			 function update_colors(dimension) {
+			 // change the fonts to bold
+			 parcoords.svg.selectAll(".dimension").style("font-weight",
+			 "normal").filter(function(d) {
+			 return d == dimension;
+			 }).style("font-weight", "bold");
 
-			// update color and font weight of chart based on axis selection
-			// modified from here: https://syntagmatic.github.io/parallel-coordinates/
-			function update_colors(dimension) {
-				// change the fonts to bold
-				parcoords.svg.selectAll(".dimension").style("font-weight",
-						"normal").filter(function(d) {
-					return d == dimension;
-				}).style("font-weight", "bold");
+			 // change color of lines
+			 // set domain of color scale
+			 var values = parcoords.data().map(function(d) {
+			 return parseFloat(d[dimension])
+			 });
+			 color_set.domain([ d3.min(values), d3.max(values) ]);
 
-				// change color of lines
-				// set domain of color scale
-				var values = parcoords.data().map(function(d) {
-					return parseFloat(d[dimension])
-				});
-				color_set.domain([ d3.min(values), d3.max(values) ]);
+			 // change colors for each line
+			 parcoords.color(function(d) {
+			 return color_set([ d[dimension] ])
+			 }).render();
+			 };
 
-				// change colors for each line
-				parcoords.color(function(d) {
-					return color_set([ d[dimension] ])
-				}).render();
-			};
+			 // Add highlight for every line on click
+			 function getCentroids(data) {
+			 // this function returns centroid points for data. I had to change the source
+			 // for parallelcoordinates and make compute_centroids public.
+			 // I assume this should be already somewhere in graph and I don't need to recalculate it
+			 // but I couldn't find it so I just wrote this for now
+			 var margins = parcoords.margin();
+			 var graphCentPts = [];
 
-			// Add highlight for every line on click
-			function getCentroids(data) {
-				// this function returns centroid points for data. I had to change the source
-				// for parallelcoordinates and make compute_centroids public.
-				// I assume this should be already somewhere in graph and I don't need to recalculate it
-				// but I couldn't find it so I just wrote this for now
-				var margins = parcoords.margin();
-				var graphCentPts = [];
+			 data.forEach(function(d) {
 
-				data.forEach(function(d) {
+			 var initCenPts = parcoords.compute_centroids(d).filter(
+			 function(d, i) {
+			 return i % 2 == 0;
+			 });
 
-					var initCenPts = parcoords.compute_centroids(d).filter(
-							function(d, i) {
-								return i % 2 == 0;
-							});
+			 // move points based on margins
+			 var cenPts = initCenPts
+			 .map(function(d) {
+			 return [ d[0] + margins["left"],
+			 d[1] + margins["top"] ];
+			 });
 
-					// move points based on margins
-					var cenPts = initCenPts
-							.map(function(d) {
-								return [ d[0] + margins["left"],
-										d[1] + margins["top"] ];
-							});
+			 graphCentPts.push(cenPts);
+			 });
 
-					graphCentPts.push(cenPts);
-				});
+			 return graphCentPts;
+			 }
 
-				return graphCentPts;
-			}
+			 function getActiveData() {
+			 // I'm pretty sure this data is already somewhere in graph
+			 if (parcoords.brushed() != false)
+			 return parcoords.brushed();
+			 return parcoords.data();
+			 }
 
-			function getActiveData() {
-				// I'm pretty sure this data is already somewhere in graph
-				if (parcoords.brushed() != false)
-					return parcoords.brushed();
-				return parcoords.data();
-			}
+			 function isOnLine(startPt, endPt, testPt, tol) {
+			 // check if test point is close enough to a line
+			 // between startPt and endPt. close enough means smaller than tolerance
+			 var x0 = testPt[0];
+			 var y0 = testPt[1];
+			 var x1 = startPt[0];
+			 var y1 = startPt[1];
+			 var x2 = endPt[0];
+			 var y2 = endPt[1];
+			 var Dx = x2 - x1;
+			 var Dy = y2 - y1;
+			 var delta = Math.abs(Dy * x0 - Dx * y0 - x1 * y2 + x2 * y1)
+			 / Math.sqrt(Math.pow(Dx, 2) + Math.pow(Dy, 2));
+			 //console.log(delta);
+			 if (delta <= tol)
+			 return true;
+			 return false;
+			 }
 
-			function isOnLine(startPt, endPt, testPt, tol) {
-				// check if test point is close enough to a line
-				// between startPt and endPt. close enough means smaller than tolerance
-				var x0 = testPt[0];
-				var y0 = testPt[1];
-				var x1 = startPt[0];
-				var y1 = startPt[1];
-				var x2 = endPt[0];
-				var y2 = endPt[1];
-				var Dx = x2 - x1;
-				var Dy = y2 - y1;
-				var delta = Math.abs(Dy * x0 - Dx * y0 - x1 * y2 + x2 * y1)
-						/ Math.sqrt(Math.pow(Dx, 2) + Math.pow(Dy, 2));
-				//console.log(delta);
-				if (delta <= tol)
-					return true;
-				return false;
-			}
+			 function findAxes(testPt, cenPts) {
+			 // finds between which two axis the mouse is
+			 var x = testPt[0];
+			 var y = testPt[1];
 
-			function findAxes(testPt, cenPts) {
-				// finds between which two axis the mouse is
-				var x = testPt[0];
-				var y = testPt[1];
+			 // make sure it is inside the range of x
+			 if (cenPts[0][0] > x)
+			 return false;
+			 if (cenPts[cenPts.length - 1][0] < x)
+			 return false;
 
-				// make sure it is inside the range of x
-				if (cenPts[0][0] > x)
-					return false;
-				if (cenPts[cenPts.length - 1][0] < x)
-					return false;
+			 // find between which segment the point is
+			 for (var i = 0; i < cenPts.length; i++) {
+			 if (cenPts[i][0] > x)
+			 return i;
+			 }
+			 }
 
-				// find between which segment the point is
-				for (var i = 0; i < cenPts.length; i++) {
-					if (cenPts[i][0] > x)
-						return i;
-				}
-			}
+			 function cleanTooltip() {
+			 // removes any object under #tooltip is
+			 parcoords.svg.selectAll("#tooltip").remove();
+			 }
 
-			function cleanTooltip() {
-				// removes any object under #tooltip is
-				parcoords.svg.selectAll("#tooltip").remove();
-			}
+			 function addTooltip(clicked, clickedCenPts) {
 
-			function addTooltip(clicked, clickedCenPts) {
+			 // sdd tooltip to multiple clicked lines
+			 var clickedDataSet = [];
+			 var margins = parcoords.margin()
 
-				// sdd tooltip to multiple clicked lines
-				var clickedDataSet = [];
-				var margins = parcoords.margin()
+			 // get all the values into a single list
+			 // I'm pretty sure there is a better way to write this is Javascript
+			 for (var i = 0; i < clicked.length; i++) {
+			 for (var j = 0; j < clickedCenPts[i].length; j++) {
+			 var text = d3.values(clicked[i])[j];
+			 // not clean at all!
+			 var x = clickedCenPts[i][j][0] - margins.left;
+			 var y = clickedCenPts[i][j][1] - margins.top;
+			 clickedDataSet.push([ x, y, text ]);
+			 }
+			 }
+			 ;
 
-				// get all the values into a single list
-				// I'm pretty sure there is a better way to write this is Javascript
-				for (var i = 0; i < clicked.length; i++) {
-					for (var j = 0; j < clickedCenPts[i].length; j++) {
-						var text = d3.values(clicked[i])[j];
-						// not clean at all!
-						var x = clickedCenPts[i][j][0] - margins.left;
-						var y = clickedCenPts[i][j][1] - margins.top;
-						clickedDataSet.push([ x, y, text ]);
-					}
-				}
-				;
+			 // add rectangles
+			 var fontSize = 14;
+			 var padding = 2;
+			 var rectHeight = fontSize + 2 * padding; //based on font size
 
-				// add rectangles
-				var fontSize = 14;
-				var padding = 2;
-				var rectHeight = fontSize + 2 * padding; //based on font size
+			 parcoords.svg.selectAll("rect[id='tooltip']").data(
+			 clickedDataSet).enter().append("rect").attr("x",
+			 function(d) {
+			 return d[0] - d[2].length * 5;
+			 }).attr("y", function(d) {
+			 return d[1] - rectHeight + 2 * padding;
+			 }).attr("rx", "2").attr("ry", "2").attr("id", "tooltip").attr(
+			 "fill", "grey").attr("opacity", 0.9).attr("width",
+			 function(d) {
+			 return d[2].length * 10;
+			 }).attr("height", rectHeight);
 
-				parcoords.svg.selectAll("rect[id='tooltip']").data(
-						clickedDataSet).enter().append("rect").attr("x",
-						function(d) {
-							return d[0] - d[2].length * 5;
-						}).attr("y", function(d) {
-					return d[1] - rectHeight + 2 * padding;
-				}).attr("rx", "2").attr("ry", "2").attr("id", "tooltip").attr(
-						"fill", "grey").attr("opacity", 0.9).attr("width",
-						function(d) {
-							return d[2].length * 10;
-						}).attr("height", rectHeight);
+			 // add text on top of rectangle
+			 parcoords.svg.selectAll("text[id='tooltip']").data(
+			 clickedDataSet).enter().append("text").attr("x",
+			 function(d) {
+			 return d[0];
+			 }).attr("y", function(d) {
+			 return d[1];
+			 }).attr("id", "tooltip").attr("fill", "white").attr(
+			 "text-anchor", "middle").attr("font-size", fontSize)
+			 .text(function(d) {
+			 return d[2];
+			 })
+			 }
 
-				// add text on top of rectangle
-				parcoords.svg.selectAll("text[id='tooltip']").data(
-						clickedDataSet).enter().append("text").attr("x",
-						function(d) {
-							return d[0];
-						}).attr("y", function(d) {
-					return d[1];
-				}).attr("id", "tooltip").attr("fill", "white").attr(
-						"text-anchor", "middle").attr("font-size", fontSize)
-						.text(function(d) {
-							return d[2];
-						})
-			}
+			 function getClickedLines(mouseClick) {
+			 var clicked = [];
+			 var clickedCenPts = [];
 
-			function getClickedLines(mouseClick) {
-				var clicked = [];
-				var clickedCenPts = [];
+			 // find which data is activated right now
+			 var activeData = getActiveData();
 
-				// find which data is activated right now
-				var activeData = getActiveData();
+			 // find centriod points
+			 var graphCentPts = getCentroids(activeData);
 
-				// find centriod points
-				var graphCentPts = getCentroids(activeData);
+			 if (graphCentPts.length == 0)
+			 return false;
 
-				if (graphCentPts.length == 0)
-					return false;
+			 // find between which axes the point is
+			 var axeNum = findAxes(mouseClick, graphCentPts[0]);
+			 if (!axeNum)
+			 return false;
 
-				// find between which axes the point is
-				var axeNum = findAxes(mouseClick, graphCentPts[0]);
-				if (!axeNum)
-					return false;
+			 graphCentPts.forEach(function(d, i) {
+			 if (isOnLine(d[axeNum - 1], d[axeNum], mouseClick, 2)) {
+			 clicked.push(activeData[i]);
+			 clickedCenPts.push(graphCentPts[i]); // for tooltip
+			 }
+			 });
 
-				graphCentPts.forEach(function(d, i) {
-					if (isOnLine(d[axeNum - 1], d[axeNum], mouseClick, 2)) {
-						clicked.push(activeData[i]);
-						clickedCenPts.push(graphCentPts[i]); // for tooltip
-					}
-				});
+			 return [ clicked, clickedCenPts ]
+			 }
 
-				return [ clicked, clickedCenPts ]
-			}
+			 function highlightLineOnClick(mouseClick, drawTooltip) {
 
-			function highlightLineOnClick(mouseClick, drawTooltip) {
+			 var clicked = [];
+			 var clickedCenPts = [];
 
-				var clicked = [];
-				var clickedCenPts = [];
+			 clickedData = getClickedLines(mouseClick);
 
-				clickedData = getClickedLines(mouseClick);
+			 if (clickedData && clickedData[0].length != 0) {
 
-				if (clickedData && clickedData[0].length != 0) {
+			 clicked = clickedData[0];
+			 clickedCenPts = clickedData[1];
 
-					clicked = clickedData[0];
-					clickedCenPts = clickedData[1];
+			 // highlight clicked line
+			 parcoords.highlight(clicked);
 
-					// highlight clicked line
-					parcoords.highlight(clicked);
+			 if (drawTooltip) {
+			 // clean if anything is there
+			 cleanTooltip();
+			 // add tooltip
+			 addTooltip(clicked, clickedCenPts);
+			 }
 
-					if (drawTooltip) {
-						// clean if anything is there
-						cleanTooltip();
-						// add tooltip
-						addTooltip(clicked, clickedCenPts);
-					}
-
-				}
-			};
+			 }
+			 };*/
 		</script>
 	</div>
 
