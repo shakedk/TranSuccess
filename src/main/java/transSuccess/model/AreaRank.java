@@ -3,20 +3,20 @@ package transSuccess.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AreaRank {
-	private int areaId;
+	private int AreaID;
 	private double rank;
 	
 	public AreaRank(){}
-	public AreaRank(@JsonProperty("areaId") int area_id,
+	public AreaRank(@JsonProperty("AreaID") int AreaID,
 				 @JsonProperty("rank") int rank){
-		this.areaId = area_id;
+		this.AreaID = AreaID;
 		this.rank = rank;
 	}
-	public int getArea_id() {
-		return areaId;
+	public int getAreaID() {
+		return AreaID;
 	}
-	public void setArea_id(int area_id) {
-		this.areaId = area_id;
+	public void setAreaID(int AreaID) {
+		this.AreaID = AreaID;
 	}
 	public double getRank() {
 		return rank;

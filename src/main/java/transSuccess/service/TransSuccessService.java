@@ -46,7 +46,7 @@ public class TransSuccessService {
 			int idIndex = desc.indexOf("ms_ezor")+10;
 			String id = desc.substring(idIndex,idIndex+3);
 			for(AreaRank areaRank : areaRanks){
-				int rankId = areaRank.getArea_id();
+				int rankId = areaRank.getAreaID();
 				if(Integer.parseInt(id)==rankId){
 					double rank = areaRank.getRank();
 					feature.setProperty("styleHash", rank);
