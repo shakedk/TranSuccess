@@ -172,7 +172,7 @@ path {
 			var areasLayer;
 
 			draw_areas_on_map = function() {
-				d3.json('http://' + host + ':8080/areas', function(data) {
+				d3.json('http://' + host + ':8080/areas/22/23', function(data) {
 					areasLayer = L.geoJson(data, {
 						style : getAreaStyle,
 						onEachFeature : onEachFeature

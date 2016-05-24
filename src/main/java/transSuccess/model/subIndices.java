@@ -12,6 +12,7 @@ public class subIndices {
 	private double normalizedMedianIncome;
 	private String mainStreets;
 	private double safAreaPopulation;
+	private double safAreaPopulationScaled1to10;
 	//STAI = ocioeconomic Transit Availability Index
 	private double stai;
 	
@@ -25,7 +26,8 @@ public class subIndices {
 				 @JsonProperty("safAreaPopulation") double safAreaPopulation,
 				 @JsonProperty("mainStreets") String mainStreets,
 				 @JsonProperty("stai") double normalizedMedianIncome,
-				@JsonProperty("stai") double stai){
+				@JsonProperty("stai") double stai,
+				@JsonProperty("safAreaPopulationScaled1to10") double safAreaPopulationScaled1to10){
 		this.areaId = area_id;		
 		this.numberOfStopsInArea = numberOfStopsInArea;
 		this.areaShapeArea = areaShapeArea;
@@ -36,6 +38,7 @@ public class subIndices {
 		this.stai = stai;
 		this.safAreaPopulation = safAreaPopulation;
 		this.normalizedMedianIncome = normalizedMedianIncome;
+		this.safAreaPopulationScaled1to10 = safAreaPopulationScaled1to10 ; 
 	}
 	public subIndices(String areaID) {
 		this.areaId = Integer.parseInt(areaID);
@@ -100,6 +103,12 @@ public class subIndices {
 	}
 	public void setNormalizedMedianIncome(double normalizedMedianIncome) {
 		this.normalizedMedianIncome = normalizedMedianIncome;
+	}
+	public double getSafAreaPopulationScaled1to10() {
+		return safAreaPopulationScaled1to10;
+	}
+	public void setSafAreaPopulationScaled1to10(double safAreaPopulationScaled1to10) {
+		this.safAreaPopulationScaled1to10 = safAreaPopulationScaled1to10;
 	}
 
 }

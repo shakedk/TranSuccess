@@ -57,9 +57,8 @@ public class TransSuccessController {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(TransSuccessController.class, args);
-//		TransSuccessService.connectToDb();
-//		TransSuccessService.updateStopsAVGs(TransSuccessService.getTelAvivStopIDs());
+		SpringApplication.run(TransSuccessController.class, args);		
+		//TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());
 		
 	}
 }

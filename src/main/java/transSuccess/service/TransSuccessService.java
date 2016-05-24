@@ -38,20 +38,8 @@ public class TransSuccessService {
 
 	public JsonNode getTelAvivAreas(int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
-		return getAreaSubIndices(filesRepository.getTelAvivAreas(), startHour, endHour);
-		// Resource resource = new ClassPathResource(path);
-		// ObjectMapper m = new ObjectMapper();
-		// JsonNode rootNode = null;
-		// try {
-		// rootNode = m.readTree(resource.getFile());
-		// } catch (JsonProcessingException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// return rootNode;
+		return updateTelAvivAerasWithData(filesRepository.getTelAvivAreas(), startHour, endHour);
+
 	}
 
 	public JsonNode getAreasRanks() throws JsonParseException, JsonMappingException, IOException {
@@ -62,24 +50,37 @@ public class TransSuccessService {
 		return filesRepository.getSubIndices();
 	}
 
-	private JsonNode getAreaSubIndices(JsonNode file, int startHour, int endHour)
+	private JsonNode updateTelAvivAerasWithData(JsonNode file, int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper m = new ObjectMapper();
 		JsonNode jsonAreasRanks = getAreasRanks();
 		List<AreaRank> areaRanks = m.readValue(jsonAreasRanks.toString(), new TypeReference<List<AreaRank>>() {
 		});
-		TransSuccessService.calculateSubIndices(startHour, endHour);
 		FeatureCollection featureCollection = m.readValue(file.toString(), FeatureCollection.class);
 		List<Feature> features = featureCollection.getFeatures();
+		Map<String, subIndices> areasData = calculateSubIndices(startHour, endHour);
 		for (Feature feature : features) {
 			String desc = feature.getProperty("Description");
 			int idIndex = desc.indexOf("ms_ezor") + 10;
 			String id = desc.substring(idIndex, idIndex + 3);
-			for (AreaRank areaRank : areaRanks) {
-				int rankId = areaRank.getAreaID();
-				if (Integer.parseInt(id) == rankId) {
-					double rank = areaRank.getRank();
-					feature.setProperty("styleHash", rank);
+			//Calculate the needed values			
+			for (String areaID : areasData.keySet()) {
+//			for (AreaRank areaRank : areaRanks) {
+				subIndices area = areasData.get(areaID);
+//				int rankId = areaRank.getAreaID();
+//				if (Integer.parseInt(id) == rankId) {
+				if (id.equals(areaID)){
+//					double stai = areaRank.getRank();
+					//TODO: Insert explanation about formula
+					double stai = area.getNormalizedMedianIncome() * 10 * 0.5 + area.getSafAreaPopulationScaled1to10() * 0.5;
+					// STAI smoothed out using log & scaling to 1-10
+					if (stai <= 0){
+						stai = -1;						
+					} else {
+						stai = Math.log10(stai);
+						stai = stai * 10;
+					}
+					feature.setProperty("styleHash", Math.floor(stai));
 					feature.setProperty("Name", id);
 				}
 			}
@@ -98,6 +99,7 @@ public class TransSuccessService {
 	}
 
 	public static ArrayList<String> getTelAvivStopIDs() {
+		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
 		ArrayList<String> stopIDs = new ArrayList<String>();
@@ -114,54 +116,70 @@ public class TransSuccessService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		closeConnection();
 		return stopIDs;
 	}
 
-	public static ArrayList<String> updateStopsAVGs(ArrayList<String> stopIDs) {
-		PreparedStatement ps;
+	@SuppressWarnings("finally")
+	/**
+	 * Updates the hourly frequency (num of buses that pass every hour in each
+	 * station)
+	 * 
+	 * @param stopIDs
+	 * @return
+	 */
+	public static ArrayList<String> updateStopsFreqs(ArrayList<String> stopIDs) {
+		connectToDb();
+		PreparedStatement ps = null;
 		String query;
-		// for (String stopID : stopIDs) {
-		// for (int i = 0; i < hours.length; i++) {
-		query =
-		// "insert into stopsavgfrequencies (stop_id,hr" + hours[i]
-		// + ") select stop_id,count(*) from (select
-		// route_id,arrival_time,stop_id from stop_times JOIN trips JOIN
-		// calendar where calendar.service_id=trips.service_id AND
-		// calendar.sunday='TRUE' and stop_id='"
-		// + stopID + "' and arrival_time like '" + hours[i]
-		// + ":%' and stop_times.trip_id=trips.trip_id group by
-		// route_id,arrival_time,stop_id)";
+		// This will only work if the stopIDs were populated into the table
+		// first!!! Use CSV load
+		// ITerating over 24 hours, for each hour iterating over all the stops
+		for (int i = 0; i < hours.length; i++) {
+			query = "update stophourlyfrequencies set hr" + hours[i]
+					+ " = (select count(*) from (select route_id,arrival_time,stop_id from stop_times JOIN trips JOIN calendar where calendar.service_id=trips.service_id AND calendar.sunday='TRUE' and stop_id="
+					+ "(?) and arrival_time like '" + hours[i]
+					+ ":%' and stop_times.trip_id=trips.trip_id group by route_id,arrival_time,stop_id)) where stop_id="
+					+ "(?)";
+			try {
+				ps = conn.prepareStatement(query);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for (String stopID : stopIDs) {
 
-		// "update stophourlyfrequencies set hr"
-		// +hours[i]+" = (select count(*) from (select
-		// route_id,arrival_time,stop_id from stop_times JOIN trips JOIN
-		// calendar where calendar.service_id=trips.service_id AND
-		// calendar.sunday='TRUE' and stop_id='"+stopID+
-		// "' and arrival_time like '"+hours[i]+
-		// ":%' and stop_times.trip_id=trips.trip_id group by
-		// route_id,arrival_time,stop_id)) where stop_id='"+stopID+"'";
-
-		"update stophourlyfrequencies set hr05 = 8 where stop_id='759'";
-		try {
-			ps = conn.prepareStatement(query);
-			ps.executeUpdate();
-			ps.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				try {
+					ps.setString(1, stopID);
+					ps.setString(2, stopID);
+					ps.addBatch();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			try {
+				int[] executeBatch = ps.executeBatch();
+				ps.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		// }
-		// }
+		closeConnection();
 		return stopIDs;
 	}
 
 	/**
-	 * Calculating Accessibility Index: SAF / Area / Population and Normlaized Median Income
-	 * to be later combined into STAI on client side
+	 * Calculating Accessibility Index: SAF / Area / Population and Normlaized
+	 * Median Income to be later combined into STAI on client side
+	 * 
 	 * @param startHour
 	 * @param endHour
+	 * @return 
 	 */
-	public static void calculateSubIndices(int startHour, int endHour) {
+	public static Map<String, subIndices> calculateSubIndices(int startHour, int endHour) {
+
 		ArrayList<String> areasIDs = getAreasIDs();
 		Map<String, subIndices> areasData = new HashMap<String, subIndices>();
 		// Creating the areas
@@ -172,6 +190,8 @@ public class TransSuccessService {
 		getAreasData(areasData);
 		calculateAccessabilityIndex(areasData);
 		calculatingNormalizedMediaIncome(areasData);
+		calculatingSacledSaf(areasData);
+		return areasData;
 
 	}
 
@@ -179,35 +199,61 @@ public class TransSuccessService {
 		double maxMedianIncome = 0;
 		double medianIncome;
 		subIndices area;
-		//Getting the maximum median income
+		// Getting the maximum median income
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
-			 medianIncome = area.getmedianIncome();
-			if (medianIncome > maxMedianIncome){
-				maxMedianIncome = medianIncome;	
+			medianIncome = area.getmedianIncome();
+			if (medianIncome > maxMedianIncome) {
+				maxMedianIncome = medianIncome;
 			}
-		}		
-		// calculating normalized  median income 
+		}
+		// calculating normalized median income
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
-			area.setNormalizedMedianIncome(area.getmedianIncome()/maxMedianIncome);
+			area.setNormalizedMedianIncome(area.getmedianIncome() / maxMedianIncome);
 		}
 	}
 
+	private static void calculatingSacledSaf(Map<String, subIndices> areasData) {
+		double maxSaf = 0;
+		double minSaf = Integer.MAX_VALUE;
+		double saf;
+		subIndices area;
+		// Getting the minimum & maximum median income
+		for (String areaID : areasData.keySet()) {
+			area = areasData.get(areaID);
+			saf = area.getSafAreaPopulation();
+			if (saf > maxSaf) {
+				maxSaf = saf;
+			}
+			if (saf < minSaf){
+				minSaf = saf;
+			}
+		}
+		// calculating the scaled value
+		for (String areaID : areasData.keySet()) {
+			area = areasData.get(areaID);
+			saf = area.getSafAreaPopulation();
+			area.setSafAreaPopulationScaled1to10((((10-1)*(saf-minSaf))/(maxSaf-minSaf))+1);			
+		}
+	}
+	
 	private static void calculateAccessabilityIndex(Map<String, subIndices> areasData) {
 		for (String areaID : areasData.keySet()) {
 			subIndices area = areasData.get(areaID);
 			// SAF/Area/Population (pop>1000)
 			int populationCount = area.getPopulationCount();
 			if (populationCount >= 1000) {
-				area.setSafAreaPopulation(area.getStatisticalAreaFrequencies() / area.getAreaShapeArea() / populationCount);
+				area.setSafAreaPopulation(
+						area.getStatisticalAreaFrequencies() / area.getAreaShapeArea() / (populationCount*0.001));
 			} else {
 				area.setSafAreaPopulation(0);
-			}  	
+			}
 		}
 	}
 
 	private static void getAreasData(Map<String, subIndices> areasData) {
+		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
 		String query;
@@ -228,7 +274,7 @@ public class TransSuccessService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		closeConnection();
 	}
 
 	private static void calculateAverageFrequncyForEachArea(Map<String, subIndices> areas, int startHour, int endHour) {
@@ -243,6 +289,7 @@ public class TransSuccessService {
 	 * @param stopAvgFrequencies
 	 */
 	private static void calculateAreaAvgFreq(Map<String, subIndices> areas, Map<String, Double> stopAvgFrequencies) {
+		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
 		String query;
@@ -274,9 +321,11 @@ public class TransSuccessService {
 			// Save the area's number of stops
 			area.setNumberOfStopsInArea(numOfStopsInArea);
 		}
+		closeConnection();
 	}
 
 	private static ArrayList<String> getAreasIDs() {
+		connectToDb();
 		ArrayList<String> areasIDs = new ArrayList<String>();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -293,17 +342,20 @@ public class TransSuccessService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return areasIDs;
+		closeConnection();
+		return areasIDs;		
 	}
 
 	/**
 	 * Calculating the average frequency for each stop in Tel Aviv
-	 * 
+	 * SQL method
 	 * @param startHour
 	 * @param endHour
 	 * @return
 	 */
+	@SuppressWarnings("finally")
 	private static Map<String, Double> calculateStopAvgFrequencies(int startHour, int endHour) {
+		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
 		Map<String, Double> stopsAvgFrequencies = new HashMap<String, Double>();
@@ -311,7 +363,7 @@ public class TransSuccessService {
 		int numberOfHours = endHour - startHour;
 		String query = "select stop_id,(";
 		for (int i = 0; i < numberOfHours; i++) {
-			query += "+hr" + startHour + i;
+			query += "+hr" + (hours[startHour + i]);
 		}
 		query += ")/" + numberOfHours + " AS Hours from STOPHOURLYFREQUENCIES";
 		try {
@@ -325,8 +377,10 @@ public class TransSuccessService {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			closeConnection();
+			return stopsAvgFrequencies;
 		}
-		return stopsAvgFrequencies;
 	}
 
 	public static void connectToDb() {
@@ -337,6 +391,15 @@ public class TransSuccessService {
 			// add application code here
 
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static void closeConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
