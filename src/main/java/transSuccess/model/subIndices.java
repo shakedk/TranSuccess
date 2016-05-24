@@ -8,8 +8,10 @@ public class subIndices {
 	private  double areaShapeArea;
 	private int populationCount;
 	private double statisticalAreaFrequencies;
-	private double areaMedianIncome;
-	//private double socialEconomicIndex;
+	private double medianIncome;
+	private double normalizedMedianIncome;
+	private String mainStreets;
+	private double safAreaPopulation;
 	//STAI = ocioeconomic Transit Availability Index
 	private double stai;
 	
@@ -19,17 +21,24 @@ public class subIndices {
 				 @JsonProperty("areaShapeArea") double areaShapeArea,
 				 @JsonProperty("populationCount") int populationCount,
 				 @JsonProperty("statisticalAreaFrequencies") double statisticalAreaFrequencies,
-				 @JsonProperty("areaMedianIncome") double areaMedianIncome,
-			//	 @JsonProperty("socialEconomicIndex") double socialEconomicIndex,
+				 @JsonProperty("medianIncome") double medianIncome,
+				 @JsonProperty("safAreaPopulation") double safAreaPopulation,
+				 @JsonProperty("mainStreets") String mainStreets,
+				 @JsonProperty("stai") double normalizedMedianIncome,
 				@JsonProperty("stai") double stai){
 		this.areaId = area_id;		
 		this.numberOfStopsInArea = numberOfStopsInArea;
 		this.areaShapeArea = areaShapeArea;
 		this.populationCount = populationCount;
 		this.statisticalAreaFrequencies = statisticalAreaFrequencies;
-		this.areaMedianIncome = areaMedianIncome;
-	//	this.socialEconomicIndex = socialEconomicIndex;
+		this.medianIncome = medianIncome;
+		this.mainStreets = mainStreets;
 		this.stai = stai;
+		this.safAreaPopulation = safAreaPopulation;
+		this.normalizedMedianIncome = normalizedMedianIncome;
+	}
+	public subIndices(String areaID) {
+		this.areaId = Integer.parseInt(areaID);
 	}
 	public int getArea_id() {
 		return areaId;
@@ -56,17 +65,17 @@ public class subIndices {
 	public void setStatisticalAreaFrequencies(double statisticalAreaFrequencies) {
 		this.statisticalAreaFrequencies = statisticalAreaFrequencies;
 	}
-//	public double getSocialEconomicIndex() {
-//		return socialEconomicIndex;
-//	}
-//	public void setSocialEconomicIndex(double socialEconomicIndex) {
-//		this.socialEconomicIndex = socialEconomicIndex;
-//	}
-	public double getAreaMedianIncome() {
-		return areaMedianIncome;
+	public String getMainStreets() {
+		return mainStreets;
 	}
-	public void setAreaMedianIncome(double areaMedianIncome) {
-		this.areaMedianIncome = areaMedianIncome;
+	public void setMainStreets(String mainStreets) {
+		this.mainStreets = mainStreets;
+	}
+	public double getmedianIncome() {
+		return medianIncome;
+	}
+	public void setmedianIncome(double medianIncome) {
+		this.medianIncome = medianIncome;
 	}
 	public double getAreaShapeArea() {
 		return areaShapeArea;
@@ -79,6 +88,18 @@ public class subIndices {
 	}
 	public void setStai(double stai) {
 		this.stai = stai;
+	}
+	public double getSafAreaPopulation() {
+		return safAreaPopulation;
+	}
+	public void setSafAreaPopulation(double safAreaPopulation) {
+		this.safAreaPopulation = safAreaPopulation;
+	}
+	public double getNormalizedMedianIncome() {
+		return normalizedMedianIncome;
+	}
+	public void setNormalizedMedianIncome(double normalizedMedianIncome) {
+		this.normalizedMedianIncome = normalizedMedianIncome;
 	}
 
 }
