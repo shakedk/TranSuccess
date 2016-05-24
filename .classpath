@@ -33,5 +33,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/shakedk/Google Drive/אוניברסיטה/שנה ד/פרויקט גמר/מידע תחבורה ציבורית - פרויקט גמר/SQLS/opencsv-3.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/shakedk/Google Drive/אוניברסיטה/שנה ד/פרויקט גמר/מידע תחבורה ציבורית - פרויקט גמר/SQLS/h2-latest.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
