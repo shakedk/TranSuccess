@@ -201,15 +201,29 @@ path {
 			
 			draw_areas_on_map = function(startHour="06",endHour="09") {
 				d3.json('http://' + host + ':8080/areas/'+startHour+'/'+endHour, function(data) {
-//					if (typeof areasLayer != 'undefined'){
-	//						areasLayer.clearLayers();
-		//			}
+					if (typeof areasLayer != 'undefined'){						
+						updateStyles(data);
+						rePaintAreas();
+					} else{
 					areasLayer = L.geoJson(data, {
 						style : getAreaStyle,
 						onEachFeature : onEachFeature
 					}).addTo(map);
+					}
 				})
 			}
+			
+			var updateStyles = function(data){
+				//for (i = 0; i < data.features.length; i++) {
+					i=0;;
+					areasLayer.eachLayer(function(layer) {												
+						style = data.features[i].properties.styleHash;
+						layer.feature.properties.styleHash=style;
+						i++;
+					});					  
+					//}
+			}
+				
 			var color = function(d) {
 				if (d >= 0 && d <= colors.length) {
 					return colors[d];

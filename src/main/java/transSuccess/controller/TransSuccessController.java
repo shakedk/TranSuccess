@@ -43,6 +43,9 @@ public class TransSuccessController {
 			produces="application/json")
 	public @ResponseBody String getTelAvivAreas(@PathVariable("startHour") int startHour,
 			@PathVariable("endHour") int endHour) throws IOException {		
+		if (endHour-startHour==0){
+			return "";
+		}
 		JsonNode jsonNode = transSuccessService.getTelAvivAreas(startHour,endHour);
 		
 		return jsonNode.toString();

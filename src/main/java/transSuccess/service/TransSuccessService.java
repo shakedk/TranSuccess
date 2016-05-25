@@ -74,7 +74,7 @@ public class TransSuccessService {
 					// TODO: Insert explanation about formula
 					double stai = area.getNormalizedMedianIncome() * 10 * 0.5
 							+ area.getSafAreaPopulationScaled1to10() * 0.5;
-							//+ area.getSafAreaPopulation() * 10 * 0.5;
+					// + area.getSafAreaPopulation() * 10 * 0.5;
 					// STAI smoothed out using log & scaling to 1-10
 					if (stai <= 0) {
 						stai = -1;
@@ -236,7 +236,8 @@ public class TransSuccessService {
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
 			saf = area.getSafAreaPopulation();
-			area.setSafAreaPopulationScaled1to10((((10 - 1) * (saf - minSaf)) / (maxSaf - minSaf)) + 1);
+			double safAreaPopulationScaled1to10 = (((10 - 1) * (saf - minSaf)) / (maxSaf - minSaf)) + 1;
+			area.setSafAreaPopulationScaled1to10(safAreaPopulationScaled1to10);
 		}
 	}
 
@@ -246,8 +247,9 @@ public class TransSuccessService {
 			// SAF/Area/Population (pop>1000)
 			int populationCount = area.getPopulationCount();
 			if (populationCount >= 1000) {
-				area.setSafAreaPopulation(
-						area.getStatisticalAreaFrequencies() / area.getAreaShapeArea() / (populationCount * 0.001));
+				double safAreaPopulation = area.getStatisticalAreaFrequencies() / area.getAreaShapeArea()
+						/ (populationCount * 0.001);
+				area.setSafAreaPopulation(safAreaPopulation);
 			} else {
 				area.setSafAreaPopulation(0);
 			}
