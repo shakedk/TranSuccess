@@ -74,8 +74,6 @@ public class TransSuccessService {
 					// TODO: Insert explanation about formula
 					double stai = area.getNormalizedMedianIncome() * 10 * 0.5
 							+ area.getSafAreaPopulationScaled1to10() * 0.5;
-					// + area.getSafAreaPopulation() * 10 * 0.5;
-					// STAI smoothed out using log & scaling to 1-10
 					if (stai <= 0) {
 						stai = -1;
 					} else {

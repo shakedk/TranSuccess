@@ -250,12 +250,12 @@ path {
 			}
 
 			function onEachFeature(feature, layer) {
-				var AreaID = feature.properties.Name;
+				var AreaID = feature.properties.Name + " rank:"+ feature.properties.styleHash;;				
 				layer._leaflet_id = AreaID;
 				layer.on({
 					contextmenu : mousemove,
 					mouseout : mouseout,
-					text : AreaID
+					//text : AreaID
 				});
 			}
 
@@ -271,7 +271,7 @@ path {
 
 				popup.setLatLng(e.latlng);
 				popup.setContent('<div class="marker-title">Area ID: '
-						+ layer.feature.properties.Name + '</div>');
+						+ layer.feature.properties.Name + " STAI: "+ layer.feature.properties.styleHash+'</div>');
 
 				if (!popup._map)
 					popup.openOn(map);
