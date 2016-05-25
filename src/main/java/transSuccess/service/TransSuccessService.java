@@ -63,19 +63,21 @@ public class TransSuccessService {
 			String desc = feature.getProperty("Description");
 			int idIndex = desc.indexOf("ms_ezor") + 10;
 			String id = desc.substring(idIndex, idIndex + 3);
-			//Calculate the needed values			
+			// Calculate the needed values
 			for (String areaID : areasData.keySet()) {
-//			for (AreaRank areaRank : areaRanks) {
+				// for (AreaRank areaRank : areaRanks) {
 				subIndices area = areasData.get(areaID);
-//				int rankId = areaRank.getAreaID();
-//				if (Integer.parseInt(id) == rankId) {
-				if (id.equals(areaID)){
-//					double stai = areaRank.getRank();
-					//TODO: Insert explanation about formula
-					double stai = area.getNormalizedMedianIncome() * 10 * 0.5 + area.getSafAreaPopulationScaled1to10() * 0.5;
+				// int rankId = areaRank.getAreaID();
+				// if (Integer.parseInt(id) == rankId) {
+				if (id.equals(areaID)) {
+					// double stai = areaRank.getRank();
+					// TODO: Insert explanation about formula
+					double stai = area.getNormalizedMedianIncome() * 10 * 0.5
+							+ area.getSafAreaPopulationScaled1to10() * 0.5;
+							//+ area.getSafAreaPopulation() * 10 * 0.5;
 					// STAI smoothed out using log & scaling to 1-10
-					if (stai <= 0){
-						stai = -1;						
+					if (stai <= 0) {
+						stai = -1;
 					} else {
 						stai = Math.log10(stai);
 						stai = stai * 10;
@@ -176,7 +178,7 @@ public class TransSuccessService {
 	 * 
 	 * @param startHour
 	 * @param endHour
-	 * @return 
+	 * @return
 	 */
 	public static Map<String, subIndices> calculateSubIndices(int startHour, int endHour) {
 
@@ -226,7 +228,7 @@ public class TransSuccessService {
 			if (saf > maxSaf) {
 				maxSaf = saf;
 			}
-			if (saf < minSaf){
+			if (saf < minSaf) {
 				minSaf = saf;
 			}
 		}
@@ -234,10 +236,10 @@ public class TransSuccessService {
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
 			saf = area.getSafAreaPopulation();
-			area.setSafAreaPopulationScaled1to10((((10-1)*(saf-minSaf))/(maxSaf-minSaf))+1);			
+			area.setSafAreaPopulationScaled1to10((((10 - 1) * (saf - minSaf)) / (maxSaf - minSaf)) + 1);
 		}
 	}
-	
+
 	private static void calculateAccessabilityIndex(Map<String, subIndices> areasData) {
 		for (String areaID : areasData.keySet()) {
 			subIndices area = areasData.get(areaID);
@@ -245,7 +247,7 @@ public class TransSuccessService {
 			int populationCount = area.getPopulationCount();
 			if (populationCount >= 1000) {
 				area.setSafAreaPopulation(
-						area.getStatisticalAreaFrequencies() / area.getAreaShapeArea() / (populationCount*0.001));
+						area.getStatisticalAreaFrequencies() / area.getAreaShapeArea() / (populationCount * 0.001));
 			} else {
 				area.setSafAreaPopulation(0);
 			}
@@ -307,7 +309,9 @@ public class TransSuccessService {
 				while (rs.next()) {
 					numOfStopsInArea++;
 					stopID = rs.getString("stop_id");
-					avgFreqOfArea += stopAvgFrequencies.get(stopID);
+					if (stopAvgFrequencies != null) {
+						avgFreqOfArea += stopAvgFrequencies.get(stopID);
+					}
 				}
 				rs.close();
 				ps.close();
@@ -317,7 +321,11 @@ public class TransSuccessService {
 			}
 			subIndices area = areas.get(areaID);
 			// Save the average frequency for the area
-			area.setStatisticalAreaFrequencies(avgFreqOfArea / numOfStopsInArea);
+			if (numOfStopsInArea > 0) {
+				area.setStatisticalAreaFrequencies(avgFreqOfArea / numOfStopsInArea);
+			} else {
+				area.setStatisticalAreaFrequencies(0);
+			}
 			// Save the area's number of stops
 			area.setNumberOfStopsInArea(numOfStopsInArea);
 		}
@@ -343,12 +351,12 @@ public class TransSuccessService {
 			e.printStackTrace();
 		}
 		closeConnection();
-		return areasIDs;		
+		return areasIDs;
 	}
 
 	/**
-	 * Calculating the average frequency for each stop in Tel Aviv
-	 * SQL method
+	 * Calculating the average frequency for each stop in Tel Aviv SQL method
+	 * 
 	 * @param startHour
 	 * @param endHour
 	 * @return
@@ -365,7 +373,9 @@ public class TransSuccessService {
 		for (int i = 0; i < numberOfHours; i++) {
 			query += "+hr" + (hours[startHour + i]);
 		}
-		query += ")/" + numberOfHours + " AS Hours from STOPHOURLYFREQUENCIES";
+		// Converting the hours to double, so the DB returns double values and
+		// not ints
+		query += ")/" + (double) numberOfHours + " AS Hours from STOPHOURLYFREQUENCIES";
 		try {
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();

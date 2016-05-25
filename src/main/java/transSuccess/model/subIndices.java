@@ -110,5 +110,10 @@ public class subIndices {
 	public void setSafAreaPopulationScaled1to10(double safAreaPopulationScaled1to10) {
 		this.safAreaPopulationScaled1to10 = safAreaPopulationScaled1to10;
 	}
+	
+	public String toString() {
+		return ""+getArea_id();
+		
+	}
 
 }
