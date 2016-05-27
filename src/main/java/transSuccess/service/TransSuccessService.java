@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
@@ -59,10 +61,14 @@ public class TransSuccessService {
 		FeatureCollection featureCollection = m.readValue(file.toString(), FeatureCollection.class);
 		List<Feature> features = featureCollection.getFeatures();
 		Map<String, subIndices> areasData = calculateSubIndices(startHour, endHour);
+		// breakPoints = {safFirstBP,safSecondBP, incomeFirstBP,
+		// incomeSecondBP};
+	//	double[] valuesBreakPoints = getValuesBreakPoints(areasData);
 		for (Feature feature : features) {
 			String desc = feature.getProperty("Description");
 			int idIndex = desc.indexOf("ms_ezor") + 10;
 			String id = desc.substring(idIndex, idIndex + 3);
+
 			// Calculate the needed values
 			for (String areaID : areasData.keySet()) {
 				// for (AreaRank areaRank : areaRanks) {
@@ -80,7 +86,11 @@ public class TransSuccessService {
 						stai = Math.log10(stai);
 						stai = stai * 10;
 					}
-					feature.setProperty("styleHash", Math.floor(stai));
+					// ovevariant
+					 feature.setProperty("styleHash", Math.floor(stai));
+					// bivirant
+			/*		feature.setProperty("styleHash", getBiVariantValue(area.getNormalizedMedianIncome() * 10,
+							area.getSafAreaPopulationScaled1to10(), valuesBreakPoints));*/
 					feature.setProperty("Name", id);
 				}
 			}
@@ -88,6 +98,84 @@ public class TransSuccessService {
 		}
 		JsonNode node = m.convertValue(featureCollection, JsonNode.class);
 		return node;
+	}
+
+	private double[] getValuesBreakPoints(Map<String, subIndices> areasData) {
+
+		double safFirstBP = 0;
+		double safSecondBP = 0;
+		double incomeFirstBP = 0;
+		double incomeSecondBP = 0;
+		SortedSet<Double> incomeSet = new TreeSet<Double>();
+		SortedSet<Double> safSet = new TreeSet<Double>();
+		for (String areaID : areasData.keySet()) {
+			subIndices area = areasData.get(areaID);
+			safSet.add(area.getSafAreaPopulationScaled1to10());
+			incomeSet.add(area.getNormalizedMedianIncome());
+		}
+		int i = 0;
+		for (Double saf : safSet) {
+			if (i == Math.floor(safSet.size() / 3)) {
+				safFirstBP = saf;
+			}
+			i++;
+		}
+		i = 0;
+		for (Double saf : safSet) {
+			if (i == Math.floor(safSet.size() * 2 / 3)) {
+				safSecondBP = saf;
+			}
+			i++;
+		}
+		i = 0;
+		for (Double income : incomeSet) {
+			if (i == Math.floor(incomeSet.size() * 1 / 3)) {
+				incomeFirstBP = income;
+			}
+			i++;
+		}
+		i = 0;
+		for (Double income : incomeSet) {
+			if (i == Math.floor(incomeSet.size() * 2 / 3)) {
+				incomeSecondBP = income;
+			}
+			i++;
+		}
+
+		double[] breakPoints = { safFirstBP, safSecondBP, incomeFirstBP, incomeSecondBP };
+		return breakPoints;
+	}
+
+	/**
+	 * Categorizeing to 9 classes of bivirant color
+	 * @param normalizedIncome
+	 * @param safAreaPopulationScaled1to10
+	 * @param valuesBreakPoints
+	 * @return
+	 */
+	private Object getBiVariantValue(double normalizedIncome, double safAreaPopulationScaled1to10,
+			double[] valuesBreakPoints) {
+		double safFirstBP = valuesBreakPoints[0];
+		double safSecondBP = valuesBreakPoints[1];
+		double incomeFirstBP = valuesBreakPoints[2];
+		double incomeSecondBP = valuesBreakPoints[3];
+		String styleHash = "";
+		if (safAreaPopulationScaled1to10 <= safFirstBP) {
+			styleHash += "A";
+		} else if (safAreaPopulationScaled1to10 > safFirstBP && safAreaPopulationScaled1to10 <= safSecondBP ) {
+			styleHash += "B";
+		} else {
+			styleHash += "C";
+		}
+		
+		if (normalizedIncome <= incomeFirstBP) {
+			styleHash += "1";
+		} else if (normalizedIncome > incomeFirstBP && normalizedIncome <= incomeSecondBP ) {
+			styleHash += "2";
+		} else {
+			styleHash += "3";
+		}
+		return styleHash;
 	}
 
 	public JsonNode getTelAvivStations() {

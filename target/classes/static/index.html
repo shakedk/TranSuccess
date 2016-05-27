@@ -179,12 +179,24 @@ path {
 			var mappingColors = {
 				"areaBorderColor" : "rgb(152,78,163)",
 			};
-			// colors used for PC & Map
+			  //onevariant colors used for PC & Map
 			var colors = [ '#a50026', '#d73027', '#f46d43', '#fdae61',
 					'#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4',
-					'#313695' ];//[ '#762a83', '#9970ab', '#c2a5cf', '#e7d4e8',
-			//	'#f7f7f7', '#d9f0d3', '#a6dba0', '#5aae61', '#1b7837' ];//['#8e0152','#c51b7d','#de77ae','#f1b6da','#fde0ef','#e6f5d0','#b8e186','#7fbc41','#4d9221','#276419'];
-
+					'#313695' ];
+					
+	/*		//bivariant color
+			var colors = [ '#e8e8e8', //A1
+			               '#dfb0d6', //A2
+			               '#be64ac', //A3
+			               '#ace4e4', //B1			               
+						   '#a5add3', //B2
+						   '#8c62aa', //B3
+						   '#5ac8c8', //C1
+						   '#5698b9', //C2
+						   '#3b4994'//, //C3
+							//'#313695'
+							];
+*/
 			var irrelevantcolor = "grey";
 
 			//Holds the hues that will be assigned for the waiting time mapping (the station changeStations color).
@@ -200,6 +212,11 @@ path {
 			var areasLayer;
 			
 			draw_areas_on_map = function(startHour="06",endHour="09") {
+				//Preventing filtering for the same hour
+				if (startHour === endHour){
+					alert("Please select an interval of at least two hours");
+					return;
+				}
 				d3.json('http://' + host + ':8080/areas/'+startHour+'/'+endHour, function(data) {
 					if (typeof areasLayer != 'undefined'){						
 						updateStyles(data);
@@ -214,22 +231,44 @@ path {
 			}
 			
 			var updateStyles = function(data){
-				//for (i = 0; i < data.features.length; i++) {
+		
 					i=0;;
 					areasLayer.eachLayer(function(layer) {												
 						style = data.features[i].properties.styleHash;
 						layer.feature.properties.styleHash=style;
 						i++;
 					});					  
-					//}
+		
 			}
 				
 			var color = function(d) {
+			
 				if (d >= 0 && d <= colors.length) {
 					return colors[d];
 				}
 				return irrelevantcolor;
 				//	return 'orange';
+
+					//bivariant color
+					/*
+				if (d == "A1"){
+					return colors[0];}
+				if (d == "A2"){
+					return colors[1];}
+				if (d == "A3"){
+					return colors[2];}
+				if (d == "B1"){
+					return colors[3];}
+				if (d == "B2"){
+					return colors[4];}
+				if (d == "B3"){
+					return colors[5];}
+				if (d == "C1"){
+					return colors[6];}
+				if (d == "C2"){
+					return colors[7];}
+				//C3
+					return colors[8];*/
 			};
 
 			function getAreaStyle(feature) {
@@ -449,6 +488,7 @@ path {
 
 							var pcColor = function(d) {
 								return color(Math.floor(d.STAI));
+								
 							}
 							//Filtering out business areas (their Median income is < 0)
 							data = data.filter(function(d) {
