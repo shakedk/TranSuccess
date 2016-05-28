@@ -87,6 +87,9 @@ public class TransSuccessService {
 						stai = stai * 10;
 					}
 					// ovevariant
+//					if (areaID.equals("732")){
+//						stai = 9;
+//					}
 					 feature.setProperty("styleHash", Math.floor(stai));
 					// bivirant
 			/*		feature.setProperty("styleHash", getBiVariantValue(area.getNormalizedMedianIncome() * 10,
