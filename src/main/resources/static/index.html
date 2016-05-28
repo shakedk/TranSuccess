@@ -125,6 +125,9 @@ path {
 		</p>
 		<div id="slider"></div>
 		<script>
+		//Used to maintain opacity if the PC is on brush mode and the user changed time interval
+		var isOnBrushMode = false;
+		var brushedLines;
 		function TwoDigits(val){
 		    if (val < 10){
 		         return "0" + val;
@@ -220,7 +223,13 @@ path {
 				d3.json('http://' + host + ':8080/areas/'+startHour+'/'+endHour, function(data) {
 					if (typeof areasLayer != 'undefined'){						
 						updateStyles(data);
+						if (isOnBrushMode){
+							onBrushEvent(brushedLines);
+						} 
+						//Hour Filtering without brushing
+						else {
 						rePaintAreas();
+						}
 					} else{
 					areasLayer = L.geoJson(data, {
 						style : getAreaStyle,
@@ -243,6 +252,7 @@ path {
 			//Updating styles
 					areasLayer.eachLayer(function(layer) {												
 						layer.feature.properties.styleHash = areaStyleMap.get(layer._leaflet_id);
+						//layer.feature.
 					});					  
 		
 			}
@@ -525,34 +535,27 @@ path {
 							parcoords.svg.selectAll(".dimension text.label")
 									.style("color", "red");
 
+										onBrushEvent = function(d) {
+											brushedLines = d;
+											isOnBrushMode = true;
+											if (areasLayer) {
+												//Making the entire layer more transperent
+												areasLayer									
+												.setStyle({
+													fillOpacity : 0.1,
+													
+												});
+												d.forEach(function(polygon) {
+													selectPolygon = areasLayer
+															.getLayer(polygon.AreaID);
+													setAreaHighlighted(selectPolygon);
+												});
+											}
+										}			
 							// update map hightlight brush event
-							parcoords.on("brush", function(d) {
-								if (areasLayer) {
-									//Making the entire layer more transperent
-									areasLayer
-									/*.filter(function(d){
-										return d.MedianIncome > 1;
-										
-										
-										
-										
-										HERE
-										
-										
-										
-										
-										
-									})*/
-									.setStyle({
-										fillOpacity : 0.1,
-									});
-									d.forEach(function(polygon) {
-										selectPolygon = areasLayer
-												.getLayer(polygon.AreaID);
-										setAreaHighlighted(selectPolygon);
-									});
-								}
-							});
+							parcoords.on("brush",onBrushEvent );
+							
+
 
 							//Mouse highlight in PC
 							/*	d3.select("#parallelCoords svg").on("mouseover", function() {
@@ -599,6 +602,7 @@ path {
 							d3.select('#btnReset').on('click', function() {
 								parcoords.brushReset();
 								rePaintAreas();
+								isOnBrushMode = false;
 							})
 							d3.select('#sltPredicate').on('change', function() {
 								parcoords.brushPredicate(this.value);
@@ -620,6 +624,7 @@ path {
 			setAreaHighlighted = function(polygon) {
 				polygon.setStyle({
 					fillOpacity : 1,
+					fillColor: color(polygon.feature.properties.styleHash),
 				//					borderColor : 'pink'
 				});
 			};
