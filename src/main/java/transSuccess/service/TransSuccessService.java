@@ -10,22 +10,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
-import transSuccess.model.AreaRank;
-import transSuccess.model.subIndices;
+import transSuccess.model.AreaProperty;
 import transSuccess.repository.FilesRepository;
 
 @Service
@@ -35,35 +37,96 @@ public class TransSuccessService {
 	static final String[] hours = { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13",
 			"14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
 
+	private boolean isAreasDataUpdated = false;
+	private static Map<String, AreaProperty> areasData;
+
 	@Autowired
 	FilesRepository filesRepository;
 
-	public JsonNode getTelAvivAreas(int startHour, int endHour)
+	// public String getsubIndicesDataForJSON() {
+	// return filesRepository.getsubIndicesDataForJSON();
+	// }
+	//
+	public JsonNode getTelAvivAreasForMap(int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
-		return updateTelAvivAerasWithData(filesRepository.getTelAvivAreas(), startHour, endHour);
-
+		return updateAreasInMapProperties(filesRepository.getTelAvivAreas(), startHour, endHour);
 	}
 
 	public JsonNode getAreasRanks() throws JsonParseException, JsonMappingException, IOException {
 		return filesRepository.getAreaRanks();
 	}
 
-	public JsonNode getSubIndices() throws JsonParseException, JsonMappingException, IOException {
-		return filesRepository.getSubIndices();
+	public JsonNode getAreasPropertiesForPcChart()
+			throws JsonParseException, JsonMappingException, IOException {
+		return updateAreasInPCProperties(filesRepository.getAreasPropertiesForPcChart());
+	}
+	
+	private class areaSerializerForPC extends JsonSerializer<AreaProperty> {
+	    @Override
+	    public void serialize(AreaProperty value, JsonGenerator jgen, SerializerProvider provider) 
+	      throws IOException, JsonProcessingException {
+	        jgen.writeStartObject();
+	        jgen.writeNumberField("areaID", value.getAreaID());
+	        jgen.writeNumberField("numberOfStopsInArea", +value.getNumberOfStopsInArea());
+	        jgen.writeNumberField("shapeArea", value.getShapeArea());
+	        jgen.writeNumberField("population", value.getPopulation());
+	        jgen.writeNumberField("averageFrequencies",value.getAreasAverageFrequencies());
+	        jgen.writeNumberField("medianIncome",value.getMedianIncome());
+	        jgen.writeNumberField("tai",value.getTai());
+	        jgen.writeEndObject();
+	    }
 	}
 
-	private JsonNode updateTelAvivAerasWithData(JsonNode file, int startHour, int endHour)
+	@SuppressWarnings("unchecked")
+	private JsonNode updateAreasInPCProperties(JsonNode jsonFile)
+			throws JsonParseException, JsonMappingException, IOException {
+		JsonNode node = null;
+		//Waiting for the other function to update the areasData
+			Resource resource = new ClassPathResource("static/areaProperties.json");
+			ObjectMapper m = new ObjectMapper();
+			JsonNode rootNode = null;
+			try {
+				rootNode = m.readTree(resource.getFile());
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return rootNode;
+		
+//		while (!isAreasDataUpdated) {}
+//			ObjectMapper mapper = new ObjectMapper();
+//			SimpleModule module = new SimpleModule();
+//			module.addSerializer(AreaProperty.class, new areaSerializerForPC());
+//			mapper.registerModule(module);
+//			if (areasData!= null){
+//				List<AreaProperty> areasDList = new ArrayList<AreaProperty>();
+//				for (String areadID : areasData.keySet()) {
+//					areasDList.add(areasData.get(areadID));					
+//				}
+//			node = mapper.valueToTree(areasDList);
+//			
+//			}
+			// Invalidadting isAreasDataUpdated so next it will be udpated
+			// accordingly
+//			isAreasDataUpdated = false;
+
+		
+//		return node;
+	}
+
+	private JsonNode updateAreasInMapProperties(JsonNode file, int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper m = new ObjectMapper();
-		JsonNode jsonAreasRanks = getAreasRanks();
-		List<AreaRank> areaRanks = m.readValue(jsonAreasRanks.toString(), new TypeReference<List<AreaRank>>() {
-		});
 		FeatureCollection featureCollection = m.readValue(file.toString(), FeatureCollection.class);
 		List<Feature> features = featureCollection.getFeatures();
-		Map<String, subIndices> areasData = calculateSubIndices(startHour, endHour);
+		areasData = calculateAreasProperties(startHour, endHour);
+		isAreasDataUpdated = true;
 		// breakPoints = {safFirstBP,safSecondBP, incomeFirstBP,
 		// incomeSecondBP};
-	//	double[] valuesBreakPoints = getValuesBreakPoints(areasData);
+		// double[] valuesBreakPoints = getValuesBreakPoints(areasData);
 		for (Feature feature : features) {
 			String desc = feature.getProperty("Description");
 			int idIndex = desc.indexOf("ms_ezor") + 10;
@@ -71,29 +134,12 @@ public class TransSuccessService {
 
 			// Calculate the needed values
 			for (String areaID : areasData.keySet()) {
-				// for (AreaRank areaRank : areaRanks) {
-				subIndices area = areasData.get(areaID);
-				// int rankId = areaRank.getAreaID();
-				// if (Integer.parseInt(id) == rankId) {
+				AreaProperty area = areasData.get(areaID);
 				if (id.equals(areaID)) {
-					// double stai = areaRank.getRank();
 					// TODO: Insert explanation about formula
-					double stai = area.getNormalizedMedianIncome() * 10 * 0.5
-							+ area.getSafAreaPopulationScaled1to10() * 0.5;
-					if (stai <= 0) {
-						stai = -1;
-					} else {
-						stai = Math.log10(stai);
-						stai = stai * 10;
-					}
-					// ovevariant
-//					if (areaID.equals("732")){
-//						stai = 9;
-//					}
-					 feature.setProperty("styleHash", Math.floor(stai));
-					// bivirant
-			/*		feature.setProperty("styleHash", getBiVariantValue(area.getNormalizedMedianIncome() * 10,
-							area.getSafAreaPopulationScaled1to10(), valuesBreakPoints));*/
+					double tai = area.getSafAreaPopulationScaled1to10();
+					feature.setProperty("styleHash", Math.floor(tai));
+
 					feature.setProperty("Name", id);
 				}
 			}
@@ -103,91 +149,9 @@ public class TransSuccessService {
 		return node;
 	}
 
-	private double[] getValuesBreakPoints(Map<String, subIndices> areasData) {
-
-		double safFirstBP = 0;
-		double safSecondBP = 0;
-		double incomeFirstBP = 0;
-		double incomeSecondBP = 0;
-		SortedSet<Double> incomeSet = new TreeSet<Double>();
-		SortedSet<Double> safSet = new TreeSet<Double>();
-		for (String areaID : areasData.keySet()) {
-			subIndices area = areasData.get(areaID);
-			safSet.add(area.getSafAreaPopulationScaled1to10());
-			incomeSet.add(area.getNormalizedMedianIncome());
-		}
-		int i = 0;
-		for (Double saf : safSet) {
-			if (i == Math.floor(safSet.size() / 3)) {
-				safFirstBP = saf;
-			}
-			i++;
-		}
-		i = 0;
-		for (Double saf : safSet) {
-			if (i == Math.floor(safSet.size() * 2 / 3)) {
-				safSecondBP = saf;
-			}
-			i++;
-		}
-		i = 0;
-		for (Double income : incomeSet) {
-			if (i == Math.floor(incomeSet.size() * 1 / 3)) {
-				incomeFirstBP = income;
-			}
-			i++;
-		}
-		i = 0;
-		for (Double income : incomeSet) {
-			if (i == Math.floor(incomeSet.size() * 2 / 3)) {
-				incomeSecondBP = income;
-			}
-			i++;
-		}
-
-		double[] breakPoints = { safFirstBP, safSecondBP, incomeFirstBP, incomeSecondBP };
-		return breakPoints;
-	}
-
-	/**
-	 * Categorizeing to 9 classes of bivirant color
-	 * @param normalizedIncome
-	 * @param safAreaPopulationScaled1to10
-	 * @param valuesBreakPoints
-	 * @return
-	 */
-	private Object getBiVariantValue(double normalizedIncome, double safAreaPopulationScaled1to10,
-			double[] valuesBreakPoints) {
-		double safFirstBP = valuesBreakPoints[0];
-		double safSecondBP = valuesBreakPoints[1];
-		double incomeFirstBP = valuesBreakPoints[2];
-		double incomeSecondBP = valuesBreakPoints[3];
-		String styleHash = "";
-		if (safAreaPopulationScaled1to10 <= safFirstBP) {
-			styleHash += "A";
-		} else if (safAreaPopulationScaled1to10 > safFirstBP && safAreaPopulationScaled1to10 <= safSecondBP ) {
-			styleHash += "B";
-		} else {
-			styleHash += "C";
-		}
-		
-		if (normalizedIncome <= incomeFirstBP) {
-			styleHash += "1";
-		} else if (normalizedIncome > incomeFirstBP && normalizedIncome <= incomeSecondBP ) {
-			styleHash += "2";
-		} else {
-			styleHash += "3";
-		}
-		return styleHash;
-	}
-
-	public JsonNode getTelAvivStations() {
-		return filesRepository.getTelAvivStations();
-	}
-
-	public String getsubIndicesDataForJSON() {
-		return filesRepository.getsubIndicesDataForJSON();
-	}
+	// public JsonNode getTelAvivStations() {
+	// return filesRepository.getTelAvivStations();
+	// }
 
 	public static ArrayList<String> getTelAvivStopIDs() {
 		connectToDb();
@@ -211,10 +175,10 @@ public class TransSuccessService {
 		return stopIDs;
 	}
 
-	@SuppressWarnings("finally")
 	/**
 	 * Updates the hourly frequency (num of buses that pass every hour in each
-	 * station)
+	 * station) into DB - stophourlyfrequencies ;; This is only for DB populate
+	 * use!!!
 	 * 
 	 * @param stopIDs
 	 * @return
@@ -263,19 +227,19 @@ public class TransSuccessService {
 
 	/**
 	 * Calculating Accessibility Index: SAF / Area / Population and Normlaized
-	 * Median Income to be later combined into STAI on client side
+	 * Median Income
 	 * 
 	 * @param startHour
 	 * @param endHour
 	 * @return
 	 */
-	public static Map<String, subIndices> calculateSubIndices(int startHour, int endHour) {
+	public static Map<String, AreaProperty> calculateAreasProperties(int startHour, int endHour) {
 
 		ArrayList<String> areasIDs = getAreasIDs();
-		Map<String, subIndices> areasData = new HashMap<String, subIndices>();
+		Map<String, AreaProperty> areasData = new HashMap<String, AreaProperty>();
 		// Creating the areas
 		for (String areaID : areasIDs) {
-			areasData.put(areaID, new subIndices(areaID));
+			areasData.put(areaID, new AreaProperty(areaID));
 		}
 		calculateAverageFrequncyForEachArea(areasData, startHour, endHour);
 		getAreasData(areasData);
@@ -286,14 +250,14 @@ public class TransSuccessService {
 
 	}
 
-	private static void calculatingNormalizedMediaIncome(Map<String, subIndices> areasData) {
+	private static void calculatingNormalizedMediaIncome(Map<String, AreaProperty> areasData) {
 		double maxMedianIncome = 0;
 		double medianIncome;
-		subIndices area;
+		AreaProperty area;
 		// Getting the maximum median income
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
-			medianIncome = area.getmedianIncome();
+			medianIncome = area.getMedianIncome();
 			if (medianIncome > maxMedianIncome) {
 				maxMedianIncome = medianIncome;
 			}
@@ -301,51 +265,64 @@ public class TransSuccessService {
 		// calculating normalized median income
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
-			area.setNormalizedMedianIncome(area.getmedianIncome() / maxMedianIncome);
+			area.setNormalizedMedianIncome(area.getMedianIncome() / maxMedianIncome);
 		}
 	}
 
-	private static void calculatingSacledSaf(Map<String, subIndices> areasData) {
+	private static void calculatingSacledSaf(Map<String, AreaProperty> areasData) {
 		double maxSaf = 0;
 		double minSaf = Integer.MAX_VALUE;
 		double saf;
-		subIndices area;
+		AreaProperty area;
 		// Getting the minimum & maximum median income
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
-			saf = area.getSafAreaPopulation();
+			saf = area.getTai();
 			if (saf > maxSaf) {
 				maxSaf = saf;
 			}
-			if (saf < minSaf) {
+			// Emitting the 0 values
+			if (saf < minSaf && saf > 0) {
 				minSaf = saf;
 			}
 		}
+		double safAreaPopulationScaled1to10;
 		// calculating the scaled value
 		for (String areaID : areasData.keySet()) {
-			area = areasData.get(areaID);
-			saf = area.getSafAreaPopulation();
-			double safAreaPopulationScaled1to10 = (((10 - 1) * (saf - minSaf)) / (maxSaf - minSaf)) + 1;
-			area.setSafAreaPopulationScaled1to10(safAreaPopulationScaled1to10);
-		}
-	}
 
-	private static void calculateAccessabilityIndex(Map<String, subIndices> areasData) {
-		for (String areaID : areasData.keySet()) {
-			subIndices area = areasData.get(areaID);
-			// SAF/Area/Population (pop>1000)
-			int populationCount = area.getPopulationCount();
-			if (populationCount >= 1000) {
-				double safAreaPopulation = area.getStatisticalAreaFrequencies() / area.getAreaShapeArea()
-						/ (populationCount * 0.001);
-				area.setSafAreaPopulation(safAreaPopulation);
+			area = areasData.get(areaID);
+			saf = area.getTai();
+			if (saf > 0) {
+				// double safAreaPopulationScaled1to10 = (((10 - 1) * (saf -
+				// minSaf)) / (maxSaf - minSaf)) + 1;
+				safAreaPopulationScaled1to10 = ((log(saf) - log(minSaf)) / (log(maxSaf) - log(minSaf))) * 9;
+				area.setSafAreaPopulationScaled1to10(safAreaPopulationScaled1to10);
 			} else {
-				area.setSafAreaPopulation(0);
+				area.setSafAreaPopulationScaled1to10(0);
 			}
 		}
 	}
 
-	private static void getAreasData(Map<String, subIndices> areasData) {
+	private static double log(double num) {
+		return Math.log10(num);
+	}
+
+	private static void calculateAccessabilityIndex(Map<String, AreaProperty> areasData) {
+		for (String areaID : areasData.keySet()) {
+			AreaProperty area = areasData.get(areaID);
+			// SAF/Area/Population (pop>1000)
+			int populationCount = area.getPopulation();
+			if (populationCount >= 1000) {
+				double safAreaPopulation = area.getAreasAverageFrequencies() / area.getShapeArea()
+						/ (populationCount * 0.001);
+				area.setTai(safAreaPopulation);
+			} else {
+				area.setTai(0);
+			}
+		}
+	}
+
+	private static void getAreasData(Map<String, AreaProperty> areasData) {
 		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -355,11 +332,10 @@ public class TransSuccessService {
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			while (rs.next()) {
-				subIndices area = areasData.get(rs.getString("area_id"));
+				AreaProperty area = areasData.get(rs.getString("area_id"));
 				area.setmedianIncome(rs.getDouble("median_income"));
-				area.setAreaShapeArea(rs.getDouble("area_size"));
-				area.setPopulationCount(rs.getInt("population"));
-				area.setMainStreets(rs.getString("main_streets"));
+				area.setShapeArea(rs.getDouble("area_size"));
+				area.setPopulation(rs.getInt("population"));
 			}
 			rs.close();
 			ps.close();
@@ -370,7 +346,8 @@ public class TransSuccessService {
 		closeConnection();
 	}
 
-	private static void calculateAverageFrequncyForEachArea(Map<String, subIndices> areas, int startHour, int endHour) {
+	private static void calculateAverageFrequncyForEachArea(Map<String, AreaProperty> areas, int startHour,
+			int endHour) {
 		Map<String, Double> stopAvgFrequencies = calculateStopAvgFrequencies(startHour, endHour);
 		calculateAreaAvgFreq(areas, stopAvgFrequencies);
 	}
@@ -381,7 +358,7 @@ public class TransSuccessService {
 	 * @param areas
 	 * @param stopAvgFrequencies
 	 */
-	private static void calculateAreaAvgFreq(Map<String, subIndices> areas, Map<String, Double> stopAvgFrequencies) {
+	private static void calculateAreaAvgFreq(Map<String, AreaProperty> areas, Map<String, Double> stopAvgFrequencies) {
 		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -410,12 +387,12 @@ public class TransSuccessService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			subIndices area = areas.get(areaID);
+			AreaProperty area = areas.get(areaID);
 			// Save the average frequency for the area
 			if (numOfStopsInArea > 0) {
-				area.setStatisticalAreaFrequencies(avgFreqOfArea / numOfStopsInArea);
+				area.setAreasAverageFrequencies(avgFreqOfArea / numOfStopsInArea);
 			} else {
-				area.setStatisticalAreaFrequencies(0);
+				area.setAreasAverageFrequencies(0);
 			}
 			// Save the area's number of stops
 			area.setNumberOfStopsInArea(numOfStopsInArea);

@@ -22,7 +22,7 @@ public class FilesRepository {
 	private static final String AREAS_PATH = "static/tel_aviv_areas2.json";
 	private static final String STATION_PATH = "static/stations.geojson";
 	private static final String AREA_RANKS_PATH = "static/AreaRanks.json";
-	private static final String AREA_SUB_INDICES = "static/AreaSubIndices.json";
+	private static final String AREA_SUB_INDICES = "static/areaProperties.json";
 
 	public JsonNode getTelAvivAreas() {
 		return getFileFromPath(AREAS_PATH);
@@ -36,8 +36,9 @@ public class FilesRepository {
 		return getFileFromPath(AREA_RANKS_PATH);
 	}
 
-	public JsonNode getSubIndices() {
+	public JsonNode getAreasPropertiesForPcChart() {
 		return getFileFromPath(AREA_SUB_INDICES);
+		
 	}
 
 	private JsonNode getFileFromPath(String path) {
@@ -56,10 +57,10 @@ public class FilesRepository {
 		return rootNode;
 	}
 
-	public String getsubIndicesDataForJSON() {
-		return readFile("static/subIndicesDataForJSON.csv");
-
-	}
+//	public String getsubIndicesDataForJSON() {
+//		return readFile("static/subIndicesDataForJSON.csv");
+//
+//	}
 
 	@SuppressWarnings("resource")
 	private String readFile(String path) {

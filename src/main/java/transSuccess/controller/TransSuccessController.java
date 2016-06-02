@@ -32,11 +32,11 @@ public class TransSuccessController {
 	@Autowired
 	TransSuccessService transSuccessService;
 
-	@RequestMapping(value = "/subIndicesDataForJSON", method = RequestMethod.GET,
-			produces="application/csv")
-	public @ResponseBody String getsubIndicesDataForJSONCSV() throws IOException {		
-		String string = transSuccessService.getsubIndicesDataForJSON();
-		return string;
+	@RequestMapping(value = "/areaPcProperties", method = RequestMethod.GET,
+			produces="application/json")
+	public @ResponseBody JsonNode getAreasPropertiesForPcChart() throws IOException {		
+		JsonNode jsonNode = transSuccessService.getAreasPropertiesForPcChart();
+		return jsonNode;
 	}
 	
 	@RequestMapping(value = "/areas/{startHour}/{endHour}", method = RequestMethod.GET,
@@ -46,19 +46,19 @@ public class TransSuccessController {
 		if (endHour-startHour==0){
 			return "";
 		}
-		JsonNode jsonNode = transSuccessService.getTelAvivAreas(startHour,endHour);
+		JsonNode jsonNode = transSuccessService.getTelAvivAreasForMap(startHour,endHour);
 		
 		return jsonNode.toString();
 	}
 	
-	@RequestMapping(value = "/stations", method = RequestMethod.GET,
-			produces="application/json")
-	public @ResponseBody String getTelAvivStations() throws JsonProcessingException {
-		
-		JsonNode jsonNode = transSuccessService.getTelAvivStations();
-		return jsonNode.toString();
-	}
-	
+//	@RequestMapping(value = "/stations", method = RequestMethod.GET,
+//			produces="application/json")
+//	public @ResponseBody String getTelAvivStations() throws JsonProcessingException {
+//		
+//		JsonNode jsonNode = transSuccessService.getTelAvivStations();
+//		return jsonNode.toString();
+//	}
+//	
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(TransSuccessController.class, args);		
 		//TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());

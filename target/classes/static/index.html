@@ -57,7 +57,7 @@ html, body {
 }
 
 #parallelCoords {
-	width: 800 px;
+	width: 100%;
 	flex: 1;
 	/*flex-wrap: wrap;*/
 	height: 80%;
@@ -147,8 +147,8 @@ path {
 		    step: {minutes: 60	
 		    }
 		}).bind("valuesChanged", function(e, data){
-			  //console.log("Values just changed. min: " + data.values.min.getHours() + " max: " + data.values.max.getHours());
-			  draw_areas_on_map(data.values.min.getHours(),data.values.max.getHours());
+			  //Redraw upon filtering
+			  draw_areas_and_lines(data.values.min.getHours(),data.values.max.getHours());
 		});
 		//-->
 		</script>
@@ -183,9 +183,13 @@ path {
 				"areaBorderColor" : "rgb(152,78,163)",
 			};
 			  //onevariant colors used for PC & Map
-			var colors = [ '#a50026', '#d73027', '#f46d43', '#fdae61',
-					'#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4',
-					'#313695' ];
+			var colors = ["rgb(129, 16, 237)","rgb(45, 85, 253)","rgb(6, 155, 221)","rgb(0, 192, 191)","rgb(8, 226, 148)","rgb(112, 245, 26)","rgb(196, 187, 0)","rgb(232, 139, 12)","rgb(254, 75, 53)","rgb(238, 17, 128)"];
+				
+				//['#fff7fb','#ece2f0','#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
+				
+		//		[ '#a50026', '#d73027', '#f46d43', '#fdae61',
+				//	'#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4',
+				//	'#313695' ];
 					
 	/*		//bivariant color
 			var colors = [ '#e8e8e8', //A1
@@ -200,7 +204,7 @@ path {
 							//'#313695'
 							];
 */
-			var irrelevantcolor = "grey";
+			var irrelevantcolor = "rgba(255,0,0,0)";
 
 			//Holds the hues that will be assigned for the waiting time mapping (the station changeStations color).
 			//The actual setting is done after the relevant number of optional changing station is calculated.
@@ -214,7 +218,7 @@ path {
 			};
 			var areasLayer;
 			
-			draw_areas_on_map = function(startHour="06",endHour="09") {
+			draw_areas_on_map = function(startHour,endHour) {
 				//Preventing filtering for the same hour
 				if (startHour === endHour){
 					alert("Please select an interval of at least two hours");
@@ -259,7 +263,8 @@ path {
 				
 			var color = function(d) {
 			
-				if (d >= 0 && d <= colors.length) {
+				if (d > 0 && d <= colors.length) {
+					//return colors[parseInt(d/8*10)];
 					return colors[d];
 				}
 				return irrelevantcolor;
@@ -305,12 +310,12 @@ path {
 			}
 
 			function onEachFeature(feature, layer) {
-				var AreaID = feature.properties.Name;				
-				layer._leaflet_id = AreaID;
+				var areaID = feature.properties.Name;				
+				layer._leaflet_id = areaID;
 				layer.on({
 					contextmenu : contextmenu,
 					//mouseout : mouseout,
-					//text : AreaID
+					//text : areaID
 				});
 			}
 
@@ -326,7 +331,7 @@ path {
 
 				popup.setLatLng(e.latlng);
 				popup.setContent('<div class="marker-title">Area ID: '
-						+ layer.feature.properties.Name + " STAI: "+ layer.feature.properties.styleHash+'</div>');
+						+ layer.feature.properties.Name + " TAI: "+ layer.feature.properties.styleHash+'</div>');
 
 				if (!popup._map)
 					popup.openOn(map);
@@ -364,95 +369,20 @@ path {
 			};
 			legend.addTo(map);
 
-			/*			var button = L.control({
-			 position : 'topright'
-			 });
-			 button.onAdd = function(map) {
-			 var div = L.DomUtil.create('div', 'legend');
-			 div.innerHTML = '<form><input id="command" type="checkbox"/>Add Stations<br><input id="areas" type="checkbox"/>Add Areas</form>';
-			 return div;
-			 };
-			 button.addTo(map); 
-			 // add the event handler
-			 function handleCommand() {
-			 // alert("Clicked, checked = " + this.checked);
-			 if (this.checked) {
-			 $.ajax({
-			 type : "GET",
-			 contentType : "application/json; charset=utf-8",
-			 url : 'http://' + host + '/:8080/stations',
-			 dataType : 'json',
-			 async : true,
-			 data : "{}",
-			 success : function(data) {
-			 //var pos_data = data;
-			 draw_stations_on_map(data);
-			 },
-			 error : function(result) {
-
-			 }
-			 })
-			 } else {
-			 stationLayer.clearLayers();
-			 } 
-			 draw_stations_on_map = function(data) {
-			 stationLayer = L.geoJson(data, {
-			 style : getMarkerStyle
-			 }).addTo(map);
-			 }
-
-			 function getMarkerStyle() {
-			 return {
-			 color : 'black',
-			 iconUrl : 'none'
-			 };
-			 }
-			 } 
-			 //Adding a chekcbox for areas
-			 var button = L.control({
-			 position : 'topright'
-			 });
-
-			 // add the event handler
-			 function handleAreaCommand() {
-			 if (this.checked) {
-			 //Getting the area polygons from the server
-			 $.ajax({
-			 type : "GET",
-			 contentType : "application/json; charset=utf-8",
-			 url : 'http://' + host + ':8080/areas',
-			 dataType : 'json',
-			 async : true,
-			 data : "{}",
-			 success : function(data) {
-			 //var pos_data = data;
-			 draw_areas_on_map(data);
-			 },
-			 error : function(result) {
-
-			 }
-			 })
-			 } else {
-			 areasLayer.clearLayers();
-			 }
-			 }
-			 document.getElementById("areas").addEventListener("click",
-			 handleAreaCommand, false);
-			 document.getElementById("command").addEventListener("click",
-			 handleCommand, false);
-			 */
-
 			//Adding the areas and the Pc right upon page load
 			$(document).ready(function() {
-				draw_areas_on_map();
-				draw_par_coords();
+				draw_areas_and_lines();
 			});
+			
+			//Main function for drawing the elements or re-drawing them. map si called first to avoid out of date data 
+			draw_areas_and_lines = function (startHour="06",endHour="09"){
+				draw_areas_on_map(startHour,endHour);
+				draw_par_coords();
+			}
+			
 			// load csv file and create the chart
-
 			draw_par_coords = function() {
-				//TODO: Needs to use this coloring and not array
-				//var colors = d3.scale.category20b();
-				d3.csv('http://' + host + ':8080/subIndicesDataForJSON',
+					d3.json('http://' + host + ':8080/areaPcProperties/',
 						function(data) {
 							parCoordData = data;
 							//var colorgen = d3.scale.ordinal().range(colors);
@@ -473,47 +403,44 @@ path {
 							}
 
 							var dimensions = {
-								"AreaID" : {
-									title : 'Area ID',
-								},
-								"Stops" : {
+								"numberOfstopsInArea" : {
 									title : 'Number of Stops',
 									//Scaling the yAxis as sqrt to be less condensed
-									yscale : sqrtScale('Stops'),
+									yscale : sqrtScale('stops'),
 								},
-								"Area" : {
+								"shapeArea" : {
 									title : 'Area (km^2)',
 									//Scaling the yAxis as sqrt to be less condensed
 									yscale : sqrtScale('Area'),
 								},
-								"Population" : {
+								"population" : {
 									title : 'Population',
 									//Scaling the yAxis as sqrt to be less condensed
 									yscale : sqrtScale('Population'),
 								},
-								"AreasAverageFrequencies" : {
+								"areasAverageFrequencies" : {
 									title : 'Average Freq.',
 									ticks: 6,
 								},
-								"MedianIncome" : {
+								"medianIncome" : {
 									title : 'Median Income',
 									ticks: 6,
 								},
-								"STAI" : {
-									title : 'STAI',
+								"tai" : {
+									title : 'Transit Accessability Index',
 								},
 							};
 
 							var pcColor = function(d) {
-								return color(Math.floor(d.STAI));
+								return color(Math.floor(d.tai));
 								
 							}
 							//Filtering out business areas (their Median income is < 0)
 							data = data.filter(function(d) {
-								return parseFloat(d.MedianIncome) > 0
+								return parseFloat(d.medianIncome) > 0
 							})
-							parcoords.data(data).hideAxis([ "name" ]).color(
-									pcColor).dimensions(dimensions)
+							parcoords.data(data)//.hideAxis([ "areadID", "NormalizedmedianIncome", "safAreaPopulationScaled1to10" ])
+							.color(pcColor)//.dimensions(dimensions)
 									.detectDimensions().render().alpha(0.5)
 									.render().shadows().reorderable()
 									.composite("darken").margin({
@@ -547,7 +474,7 @@ path {
 												});
 												d.forEach(function(polygon) {
 													selectPolygon = areasLayer
-															.getLayer(polygon.AreaID);
+															.getLayer(polygon.areaID);
 													setAreaHighlighted(selectPolygon);
 												});
 											}
@@ -613,10 +540,10 @@ path {
 			//Highlight the cooresponding line in the PC chart
 			parLineHightlight = function(e) {
 				lineToHighlight = parCoordData.filter(function(d) {
-					return d.AreaID === e.target.feature.properties.Name;
+					return ""+d.areaID === e.target.feature.properties.Name;
 				});
 				//Don't highlight business areas, where median income is >
-				if (lineToHighlight[0].MedianIncome > 0) {
+				if (lineToHighlight[0].medianIncome > 0) {
 					parcoords.highlight(lineToHighlight);
 				}
 			};
