@@ -61,9 +61,9 @@ html, body {
 	flex: 1; /*margin-right: -20px;*/
 	margin-top: auto;
 	height: 80%;
-	width: 100%;
 	margin-top: auto;
-	margin-bottom: 100px;
+	margin-bottom: 150px;
+	
 }
 
 #map {
@@ -73,26 +73,23 @@ html, body {
 
 .parcoords .marks {
 	margin-left: 90px !important;
-	margin-bottom: 200px !important;
 }
 
 .parcoords .foreground {
-margin-left: 90px !important;}
-margin-bottom: 200px !important;
+	margin-left: 90px !important;
+}
+
 .parcoords .brushed {
-margin-left: 90px !important;
-margin-bottom: 200px !important;
+	margin-left: 90px !important;
 }
 
 .parcoords .highlight {
 	margin-left: 90px !important;
-	margin-bottom: 200px !important;
 }
 
-#svg .g{
-	/*position: relative;
-	width: 100%;*/
-	margin-bottom: 200px !important;
+#svg {
+	position: relative;
+	/*width: 100%;*/
 }
 
 path {
@@ -193,7 +190,7 @@ path {
 			//Importing the map from leaflet and adding the tiles layer.
 			//The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).
 			var map = L.map('map').addLayer(mapboxTiles).setView(
-					[ 32.087917, 34.795551], 13);
+					[ 32.087917, 34.795551], 13.5);
 			var popup = new L.Popup({
 				autoPan : false
 			});

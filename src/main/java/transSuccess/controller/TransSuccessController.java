@@ -36,7 +36,6 @@ public class TransSuccessController {
 			produces="application/json")
 	public @ResponseBody String getAreasPropertiesForPcChart() throws IOException {
 		JsonNode jsonNode = transSuccessService.getAreasPropertiesForPcChart();
-		System.out.println(jsonNode.toString());
 		return jsonNode.toString();
 		
 	}
