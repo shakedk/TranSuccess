@@ -12,7 +12,7 @@ public class AreaProperty {
 	private double normalizedMedianIncome;
 	// Transit Accessibility Index
 	private double tai;
-	private double safAreaPopulationScaled1to10;
+	private double sacaled1To10Tai;
 	
 	
 	public AreaProperty(){}
@@ -84,11 +84,11 @@ public class AreaProperty {
 	public void setNormalizedMedianIncome(double normalizedMedianIncome) {
 		this.normalizedMedianIncome = normalizedMedianIncome;
 	}
-	public double getSafAreaPopulationScaled1to10() {
-		return safAreaPopulationScaled1to10;
+	public double getSacaled1To10Tai() {
+		return sacaled1To10Tai;
 	}
-	public void setSafAreaPopulationScaled1to10(double safAreaPopulationScaled1to10) {
-		this.safAreaPopulationScaled1to10 = safAreaPopulationScaled1to10;
+	public void setSacaled1To10Tai(double sacaled1To10Tai) {
+		this.sacaled1To10Tai = sacaled1To10Tai;
 	}
 	
 	public String toString() {

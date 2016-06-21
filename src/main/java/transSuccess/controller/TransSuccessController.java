@@ -34,9 +34,11 @@ public class TransSuccessController {
 
 	@RequestMapping(value = "/areaPcProperties", method = RequestMethod.GET,
 			produces="application/json")
-	public @ResponseBody JsonNode getAreasPropertiesForPcChart() throws IOException {		
+	public @ResponseBody String getAreasPropertiesForPcChart() throws IOException {
 		JsonNode jsonNode = transSuccessService.getAreasPropertiesForPcChart();
-		return jsonNode;
+		System.out.println(jsonNode.toString());
+		return jsonNode.toString();
+		
 	}
 	
 	@RequestMapping(value = "/areas/{startHour}/{endHour}", method = RequestMethod.GET,
@@ -61,7 +63,7 @@ public class TransSuccessController {
 //	
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(TransSuccessController.class, args);		
-		//TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());
+//		TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());
 		
 	}
 }

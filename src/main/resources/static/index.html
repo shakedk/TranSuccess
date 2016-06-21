@@ -33,6 +33,7 @@ Next iterations: suggestions:
 <script src="http://d3js.org/d3.v3.js" type="text/javascript"></script>
 
 <script src="http://cdn.leafletjs.com/leaflet-1.0.0-b1/leaflet.js"></script>
+
 <script
 	src="https://syntagmatic.github.io/parallel-coordinates/d3.parcoords.js"></script>
 <!-- https://shakedk.github.io/d3.parcoords.js	 -->
@@ -57,20 +58,41 @@ html, body {
 }
 
 #parallelCoords {
-	width: 100%;
-	flex: 1;
-	/*flex-wrap: wrap;*/
+	flex: 1; /*margin-right: -20px;*/
+	margin-top: auto;
 	height: 80%;
+	width: 100%;
+	margin-top: auto;
+	margin-bottom: 100px;
 }
 
 #map {
-	width: 600px;
+	width: 50%;
 	height: 100%;
 }
 
-#svg {
-	/*position: relative;*/
-	width: 100%;
+.parcoords .marks {
+	margin-left: 90px !important;
+	margin-bottom: 200px !important;
+}
+
+.parcoords .foreground {
+margin-left: 90px !important;}
+margin-bottom: 200px !important;
+.parcoords .brushed {
+margin-left: 90px !important;
+margin-bottom: 200px !important;
+}
+
+.parcoords .highlight {
+	margin-left: 90px !important;
+	margin-bottom: 200px !important;
+}
+
+#svg .g{
+	/*position: relative;
+	width: 100%;*/
+	margin-bottom: 200px !important;
 }
 
 path {
@@ -121,9 +143,9 @@ path {
 				<option>AND</option>
 				<option>OR</option>
 			</select>
-			<button id="btnReset">Reset Brushes</button>
+			<button id="btnReset" style="display: none">Reset Brushes</button>
 		</p>
-		<div id="slider"></div>
+		<div id="slider" style="display: none"></div>
 		<script>
 		//Used to maintain opacity if the PC is on brush mode and the user changed time interval
 		var isOnBrushMode = false;
@@ -171,7 +193,7 @@ path {
 			//Importing the map from leaflet and adding the tiles layer.
 			//The initial view is centered to Tel Aviv, according to the example info (lines 171 and 222).
 			var map = L.map('map').addLayer(mapboxTiles).setView(
-					[ 32.087917, 34.795551], 12.75);
+					[ 32.087917, 34.795551], 13);
 			var popup = new L.Popup({
 				autoPan : false
 			});
@@ -185,11 +207,11 @@ path {
 			  //onevariant colors used for PC & Map
 			var colors = ["rgb(129, 16, 237)","rgb(45, 85, 253)","rgb(6, 155, 221)","rgb(0, 192, 191)","rgb(8, 226, 148)","rgb(112, 245, 26)","rgb(196, 187, 0)","rgb(232, 139, 12)","rgb(254, 75, 53)","rgb(238, 17, 128)"];
 				
-				//['#fff7fb','#ece2f0','#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
+		/*		//['#fff7fb','#ece2f0','#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
 				
-		//		[ '#a50026', '#d73027', '#f46d43', '#fdae61',
-				//	'#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4',
-				//	'#313695' ];
+				[ '#a50026', '#d73027', '#f46d43', '#fdae61',
+					'#fee090', '#e0f3f8', '#abd9e9', '#74add1', '#4575b4',
+					'#313695' ];
 					
 	/*		//bivariant color
 			var colors = [ '#e8e8e8', //A1
@@ -263,7 +285,7 @@ path {
 				
 			var color = function(d) {
 			
-				if (d > 0 && d <= colors.length) {
+				if (d >= 0 && d <= colors.length) {
 					//return colors[parseInt(d/8*10)];
 					return colors[d];
 				}
@@ -403,32 +425,34 @@ path {
 							}
 
 							var dimensions = {
-								"numberOfstopsInArea" : {
+								"numberOfStopsInArea" : {
 									title : 'Number of Stops',
 									//Scaling the yAxis as sqrt to be less condensed
-									yscale : sqrtScale('stops'),
+									yscale : sqrtScale('numberOfStopsInArea'),
 								},
 								"shapeArea" : {
 									title : 'Area (km^2)',
 									//Scaling the yAxis as sqrt to be less condensed
-									yscale : sqrtScale('Area'),
+									yscale : sqrtScale('shapeArea'),
 								},
 								"population" : {
 									title : 'Population',
 									//Scaling the yAxis as sqrt to be less condensed
-									yscale : sqrtScale('Population'),
+									//yscale : sqrtScale('population'),
 								},
-								"areasAverageFrequencies" : {
-									title : 'Average Freq.',
-									ticks: 6,
-								},
-								"medianIncome" : {
-									title : 'Median Income',
+								"averageFrequencies" : {
+									title : 'SAF',
 									ticks: 6,
 								},
 								"tai" : {
-									title : 'Transit Accessability Index',
+									title : 'TAI',
+								},	
+								"medianIncome" : {
+									title : 'Median Income',
+									ticks: 6,
+									//yscale : sqrtScale('medianIncome'),
 								},
+
 							};
 
 							var pcColor = function(d) {
@@ -437,11 +461,13 @@ path {
 							}
 							//Filtering out business areas (their Median income is < 0)
 							data = data.filter(function(d) {
-								return parseFloat(d.medianIncome) > 0
+								return parseFloat(d.tai) >= 0
 							})
-							parcoords.data(data)//.hideAxis([ "areadID", "NormalizedmedianIncome", "safAreaPopulationScaled1to10" ])
-							.color(pcColor)//.dimensions(dimensions)
-									.detectDimensions().render().alpha(0.5)
+							parcoords.data(data)
+							.color(pcColor).dimensions(dimensions)
+									.detectDimensions()
+									.hideAxis(["areaID"])
+									.render().alpha(0.5)
 									.render().shadows().reorderable()
 									.composite("darken").margin({
 										top : 24,
@@ -449,12 +475,14 @@ path {
 										bottom : 12,
 										right : 0
 									}).mode("queue").render().brushMode(
-											"1D-axes"); // enable brushing
+											"1D-axes").updateAxes(); // enable brushing
 
 							//styling the text
 							parcoords.svg.selectAll("text").style("font",
 									"20px sans-serif");
 
+							parcoords.svg.attr("transform", "translate(90,24)");
+							parcoords.svg.attr("margin-bottom", "20px");
 							//styling the axes
 							/*	parcoords.svg.selectAll(".ctx.foreground.lineWidth").style(
 										"lineWidth ", "6");*/
@@ -556,219 +584,6 @@ path {
 				});
 			};
 
-			///////////////////////////////HIGHILIGHT PAAr/////////////////////////////
-			/*
-			 //add hover event
-			 d3.select("#parallelCoords svg").on("mousemove", function() {
-			 var mousePosition = d3.mouse(this);
-			 highlightLineOnClick(mousePosition, true); //true will also add tooltip
-			 }).on("mouseout", function() {
-			 cleanTooltip();
-			 parcoords.unhighlight();
-			 });
-
-			 // update color and font weight of chart based on axis selection
-			 // modified from here: https://syntagmatic.github.io/parallel-coordinates/
-			 function update_colors(dimension) {
-			 // change the fonts to bold
-			 parcoords.svg.selectAll(".dimension").style("font-weight",
-			 "normal").filter(function(d) {
-			 return d == dimension;
-			 }).style("font-weight", "bold");
-
-			 // change color of lines
-			 // set domain of color scale
-			 var values = parcoords.data().map(function(d) {
-			 return parseFloat(d[dimension])
-			 });
-			 color_set.domain([ d3.min(values), d3.max(values) ]);
-
-			 // change colors for each line
-			 parcoords.color(function(d) {
-			 return color_set([ d[dimension] ])
-			 }).render();
-			 };
-
-			 // Add highlight for every line on click
-			 function getCentroids(data) {
-			 // this function returns centroid points for data. I had to change the source
-			 // for parallelcoordinates and make compute_centroids public.
-			 // I assume this should be already somewhere in graph and I don't need to recalculate it
-			 // but I couldn't find it so I just wrote this for now
-			 var margins = parcoords.margin();
-			 var graphCentPts = [];
-
-			 data.forEach(function(d) {
-
-			 var initCenPts = parcoords.compute_centroids(d).filter(
-			 function(d, i) {
-			 return i % 2 == 0;
-			 });
-
-			 // move points based on margins
-			 var cenPts = initCenPts
-			 .map(function(d) {
-			 return [ d[0] + margins["left"],
-			 d[1] + margins["top"] ];
-			 });
-
-			 graphCentPts.push(cenPts);
-			 });
-
-			 return graphCentPts;
-			 }
-
-			 function getActiveData() {
-			 // I'm pretty sure this data is already somewhere in graph
-			 if (parcoords.brushed() != false)
-			 return parcoords.brushed();
-			 return parcoords.data();
-			 }
-
-			 function isOnLine(startPt, endPt, testPt, tol) {
-			 // check if test point is close enough to a line
-			 // between startPt and endPt. close enough means smaller than tolerance
-			 var x0 = testPt[0];
-			 var y0 = testPt[1];
-			 var x1 = startPt[0];
-			 var y1 = startPt[1];
-			 var x2 = endPt[0];
-			 var y2 = endPt[1];
-			 var Dx = x2 - x1;
-			 var Dy = y2 - y1;
-			 var delta = Math.abs(Dy * x0 - Dx * y0 - x1 * y2 + x2 * y1)
-			 / Math.sqrt(Math.pow(Dx, 2) + Math.pow(Dy, 2));
-			 //console.log(delta);
-			 if (delta <= tol)
-			 return true;
-			 return false;
-			 }
-
-			 function findAxes(testPt, cenPts) {
-			 // finds between which two axis the mouse is
-			 var x = testPt[0];
-			 var y = testPt[1];
-
-			 // make sure it is inside the range of x
-			 if (cenPts[0][0] > x)
-			 return false;
-			 if (cenPts[cenPts.length - 1][0] < x)
-			 return false;
-
-			 // find between which segment the point is
-			 for (var i = 0; i < cenPts.length; i++) {
-			 if (cenPts[i][0] > x)
-			 return i;
-			 }
-			 }
-
-			 function cleanTooltip() {
-			 // removes any object under #tooltip is
-			 parcoords.svg.selectAll("#tooltip").remove();
-			 }
-
-			 function addTooltip(clicked, clickedCenPts) {
-
-			 // sdd tooltip to multiple clicked lines
-			 var clickedDataSet = [];
-			 var margins = parcoords.margin()
-
-			 // get all the values into a single list
-			 // I'm pretty sure there is a better way to write this is Javascript
-			 for (var i = 0; i < clicked.length; i++) {
-			 for (var j = 0; j < clickedCenPts[i].length; j++) {
-			 var text = d3.values(clicked[i])[j];
-			 // not clean at all!
-			 var x = clickedCenPts[i][j][0] - margins.left;
-			 var y = clickedCenPts[i][j][1] - margins.top;
-			 clickedDataSet.push([ x, y, text ]);
-			 }
-			 }
-			 ;
-
-			 // add rectangles
-			 var fontSize = 14;
-			 var padding = 2;
-			 var rectHeight = fontSize + 2 * padding; //based on font size
-
-			 parcoords.svg.selectAll("rect[id='tooltip']").data(
-			 clickedDataSet).enter().append("rect").attr("x",
-			 function(d) {
-			 return d[0] - d[2].length * 5;
-			 }).attr("y", function(d) {
-			 return d[1] - rectHeight + 2 * padding;
-			 }).attr("rx", "2").attr("ry", "2").attr("id", "tooltip").attr(
-			 "fill", "grey").attr("opacity", 0.9).attr("width",
-			 function(d) {
-			 return d[2].length * 10;
-			 }).attr("height", rectHeight);
-
-			 // add text on top of rectangle
-			 parcoords.svg.selectAll("text[id='tooltip']").data(
-			 clickedDataSet).enter().append("text").attr("x",
-			 function(d) {
-			 return d[0];
-			 }).attr("y", function(d) {
-			 return d[1];
-			 }).attr("id", "tooltip").attr("fill", "white").attr(
-			 "text-anchor", "middle").attr("font-size", fontSize)
-			 .text(function(d) {
-			 return d[2];
-			 })
-			 }
-
-			 function getClickedLines(mouseClick) {
-			 var clicked = [];
-			 var clickedCenPts = [];
-
-			 // find which data is activated right now
-			 var activeData = getActiveData();
-
-			 // find centriod points
-			 var graphCentPts = getCentroids(activeData);
-
-			 if (graphCentPts.length == 0)
-			 return false;
-
-			 // find between which axes the point is
-			 var axeNum = findAxes(mouseClick, graphCentPts[0]);
-			 if (!axeNum)
-			 return false;
-
-			 graphCentPts.forEach(function(d, i) {
-			 if (isOnLine(d[axeNum - 1], d[axeNum], mouseClick, 2)) {
-			 clicked.push(activeData[i]);
-			 clickedCenPts.push(graphCentPts[i]); // for tooltip
-			 }
-			 });
-
-			 return [ clicked, clickedCenPts ]
-			 }
-
-			 function highlightLineOnClick(mouseClick, drawTooltip) {
-
-			 var clicked = [];
-			 var clickedCenPts = [];
-
-			 clickedData = getClickedLines(mouseClick);
-
-			 if (clickedData && clickedData[0].length != 0) {
-
-			 clicked = clickedData[0];
-			 clickedCenPts = clickedData[1];
-
-			 // highlight clicked line
-			 parcoords.highlight(clicked);
-
-			 if (drawTooltip) {
-			 // clean if anything is there
-			 cleanTooltip();
-			 // add tooltip
-			 addTooltip(clicked, clickedCenPts);
-			 }
-
-			 }
-			 };*/
 		</script>
 	</div>
 

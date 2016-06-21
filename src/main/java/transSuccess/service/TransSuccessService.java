@@ -14,8 +14,6 @@ import java.util.Map;
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -26,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import transSuccess.model.AreaProperty;
 import transSuccess.repository.FilesRepository;
@@ -72,7 +71,7 @@ public class TransSuccessService {
 	        jgen.writeNumberField("population", value.getPopulation());
 	        jgen.writeNumberField("averageFrequencies",value.getAreasAverageFrequencies());
 	        jgen.writeNumberField("medianIncome",value.getMedianIncome());
-	        jgen.writeNumberField("tai",value.getTai());
+	        jgen.writeNumberField("tai",value.getSacaled1To10Tai());
 	        jgen.writeEndObject();
 	    }
 	}
@@ -82,39 +81,37 @@ public class TransSuccessService {
 			throws JsonParseException, JsonMappingException, IOException {
 		JsonNode node = null;
 		//Waiting for the other function to update the areasData
-			Resource resource = new ClassPathResource("static/areaProperties.json");
-			ObjectMapper m = new ObjectMapper();
-			JsonNode rootNode = null;
-			try {
-				rootNode = m.readTree(resource.getFile());
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return rootNode;
-		
-//		while (!isAreasDataUpdated) {}
-//			ObjectMapper mapper = new ObjectMapper();
-//			SimpleModule module = new SimpleModule();
-//			module.addSerializer(AreaProperty.class, new areaSerializerForPC());
-//			mapper.registerModule(module);
-//			if (areasData!= null){
-//				List<AreaProperty> areasDList = new ArrayList<AreaProperty>();
-//				for (String areadID : areasData.keySet()) {
-//					areasDList.add(areasData.get(areadID));					
-//				}
-//			node = mapper.valueToTree(areasDList);
-//			
+//			Resource resource = new ClassPathResource("static/areaProperties.json");
+//			ObjectMapper m = new ObjectMapper();
+//			JsonNode rootNode = null;
+//			try {
+//				rootNode = m.readTree(resource.getFile());
+//			} catch (JsonProcessingException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
 //			}
+//			return rootNode;
+		
+		while (!isAreasDataUpdated) {}
+			ObjectMapper mapper = new ObjectMapper();
+			SimpleModule module = new SimpleModule();
+			module.addSerializer(AreaProperty.class, new areaSerializerForPC());
+			mapper.registerModule(module);
+			if (areasData!= null){
+				List<AreaProperty> areasDList = new ArrayList<AreaProperty>();
+				for (String areadID : areasData.keySet()) {
+					areasDList.add(areasData.get(areadID));					
+				}
+			node = mapper.valueToTree(areasDList);
+			
+			}
 			// Invalidadting isAreasDataUpdated so next it will be udpated
 			// accordingly
-//			isAreasDataUpdated = false;
-
-		
-//		return node;
+			isAreasDataUpdated = false;		
+		return node;
 	}
 
 	private JsonNode updateAreasInMapProperties(JsonNode file, int startHour, int endHour)
@@ -134,12 +131,11 @@ public class TransSuccessService {
 
 			// Calculate the needed values
 			for (String areaID : areasData.keySet()) {
-				AreaProperty area = areasData.get(areaID);
+				AreaProperty area = areasData.get(areaID);				
 				if (id.equals(areaID)) {
 					// TODO: Insert explanation about formula
-					double tai = area.getSafAreaPopulationScaled1to10();
-					feature.setProperty("styleHash", Math.floor(tai));
-
+					double scaledTai = area.getSacaled1To10Tai();
+					feature.setProperty("styleHash", Math.floor(scaledTai));
 					feature.setProperty("Name", id);
 				}
 			}
@@ -272,18 +268,18 @@ public class TransSuccessService {
 	private static void calculatingSacledSaf(Map<String, AreaProperty> areasData) {
 		double maxSaf = 0;
 		double minSaf = Integer.MAX_VALUE;
-		double saf;
+		double tai;
 		AreaProperty area;
 		// Getting the minimum & maximum median income
 		for (String areaID : areasData.keySet()) {
 			area = areasData.get(areaID);
-			saf = area.getTai();
-			if (saf > maxSaf) {
-				maxSaf = saf;
+			tai = area.getTai();
+			if (tai > maxSaf) {
+				maxSaf = tai;
 			}
 			// Emitting the 0 values
-			if (saf < minSaf && saf > 0) {
-				minSaf = saf;
+			if (tai < minSaf && tai > 0) {
+				minSaf = tai;
 			}
 		}
 		double safAreaPopulationScaled1to10;
@@ -291,14 +287,14 @@ public class TransSuccessService {
 		for (String areaID : areasData.keySet()) {
 
 			area = areasData.get(areaID);
-			saf = area.getTai();
-			if (saf > 0) {
+			tai = area.getTai();
+			if (tai >= 0) {
 				// double safAreaPopulationScaled1to10 = (((10 - 1) * (saf -
 				// minSaf)) / (maxSaf - minSaf)) + 1;
-				safAreaPopulationScaled1to10 = ((log(saf) - log(minSaf)) / (log(maxSaf) - log(minSaf))) * 9;
-				area.setSafAreaPopulationScaled1to10(safAreaPopulationScaled1to10);
+				safAreaPopulationScaled1to10 = ((log(tai) - log(minSaf)) / (log(maxSaf) - log(minSaf))) * 9;
+				area.setSacaled1To10Tai(safAreaPopulationScaled1to10);
 			} else {
-				area.setSafAreaPopulationScaled1to10(0);
+				area.setSacaled1To10Tai(-1);
 			}
 		}
 	}
@@ -312,12 +308,23 @@ public class TransSuccessService {
 			AreaProperty area = areasData.get(areaID);
 			// SAF/Area/Population (pop>1000)
 			int populationCount = area.getPopulation();
-			if (populationCount >= 1000) {
-				double safAreaPopulation = area.getAreasAverageFrequencies() / area.getShapeArea()
-						/ (populationCount * 0.001);
+			
+			/*
+			 * 
+			 * 
+			 * 
+			 * 
+			 *  I chamged this from if (populationCount > 1000) {
+			 * 
+			 * 
+			 * 
+			 */
+			if (populationCount > 100) {
+				double safAreaPopulation = area.getAreasAverageFrequencies() / (area.getShapeArea()
+						/ (populationCount * 0.001));
 				area.setTai(safAreaPopulation);
 			} else {
-				area.setTai(0);
+				area.setTai(-1);
 			}
 		}
 	}
