@@ -1,0 +1,75 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	display: flex;
+}
+
+#parallelCoords {
+	flex: 1; 
+	/*margin-top: auto;*/
+	height: 80%;	
+	margin-bottom: 150px;
+	
+}
+
+#map {
+	width: 50%;
+	height: 100%;
+}
+
+.parcoords .marks {
+	margin-left: 90px !important;
+}
+
+.parcoords .foreground {
+	margin-left: 90px !important;
+}
+
+.parcoords .brushed {
+	margin-left: 90px !important;
+}
+
+.parcoords .highlight {
+	margin-left: 90px !important;
+}
+
+#svg {
+	position: relative;
+	/*width: 100%;*/
+}
+
+path {
+	stroke-width: 3px;
+	stroke-opacity: 0.5;
+}
+
+.stationsText {
+	stroke: black;
+	stroke-width: 0.1px;
+	fill: #67000d;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+.stations {
+	stroke-width: 1px;
+	stroke: black;
+}
+
+.lineStations {
+	fill-opacity: 0;
+	stroke-opacity: 0;
+	;
+}
+
+.legend {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	line-height: 18px;
+	color: #555;
+}

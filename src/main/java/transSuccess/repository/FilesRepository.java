@@ -19,7 +19,7 @@ public class FilesRepository {
 	public FilesRepository() {
 	}
 
-	private static final String AREAS_PATH = "static/tel_aviv_areas2.json";
+	private static final String AREAS_PATH = "static/tel_aviv_areas.json";
 	private static final String STATION_PATH = "static/stations.geojson";
 	private static final String AREA_RANKS_PATH = "static/AreaRanks.json";
 	private static final String AREA_SUB_INDICES = "static/areaProperties.json";
@@ -57,10 +57,6 @@ public class FilesRepository {
 		return rootNode;
 	}
 
-//	public String getsubIndicesDataForJSON() {
-//		return readFile("static/subIndicesDataForJSON.csv");
-//
-//	}
 
 	@SuppressWarnings("resource")
 	private String readFile(String path) {

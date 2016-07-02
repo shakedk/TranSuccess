@@ -42,10 +42,6 @@ public class TransSuccessService {
 	@Autowired
 	FilesRepository filesRepository;
 
-	// public String getsubIndicesDataForJSON() {
-	// return filesRepository.getsubIndicesDataForJSON();
-	// }
-	//
 	public JsonNode getTelAvivAreasForMap(int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
 		return updateAreasInMapProperties(filesRepository.getTelAvivAreas(), startHour, endHour);
@@ -80,21 +76,6 @@ public class TransSuccessService {
 	private JsonNode updateAreasInPCProperties(JsonNode jsonFile)
 			throws JsonParseException, JsonMappingException, IOException {
 		JsonNode node = null;
-		//Waiting for the other function to update the areasData
-//			Resource resource = new ClassPathResource("static/areaProperties.json");
-//			ObjectMapper m = new ObjectMapper();
-//			JsonNode rootNode = null;
-//			try {
-//				rootNode = m.readTree(resource.getFile());
-//			} catch (JsonProcessingException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return rootNode;
-		
 		while (!isAreasDataUpdated) {}
 			ObjectMapper mapper = new ObjectMapper();
 			SimpleModule module = new SimpleModule();
@@ -121,9 +102,6 @@ public class TransSuccessService {
 		List<Feature> features = featureCollection.getFeatures();
 		areasData = calculateAreasProperties(startHour, endHour);
 		isAreasDataUpdated = true;
-		// breakPoints = {safFirstBP,safSecondBP, incomeFirstBP,
-		// incomeSecondBP};
-		// double[] valuesBreakPoints = getValuesBreakPoints(areasData);
 		for (Feature feature : features) {
 			String desc = feature.getProperty("Description");
 			int idIndex = desc.indexOf("ms_ezor") + 10;
@@ -285,14 +263,18 @@ public class TransSuccessService {
 		double safAreaPopulationScaled1to10;
 		// calculating the scaled value
 		for (String areaID : areasData.keySet()) {
-
 			area = areasData.get(areaID);
 			tai = area.getTai();
 			if (tai >= 0) {
 				// double safAreaPopulationScaled1to10 = (((10 - 1) * (saf -
 				// minSaf)) / (maxSaf - minSaf)) + 1;
 				safAreaPopulationScaled1to10 = ((log(tai) - log(minSaf)) / (log(maxSaf) - log(minSaf))) * 9;
-				area.setSacaled1To10Tai(safAreaPopulationScaled1to10);
+				if (safAreaPopulationScaled1to10 > 0){
+					area.setSacaled1To10Tai(safAreaPopulationScaled1to10); 
+				}
+				else {
+					area.setSacaled1To10Tai(-1);
+				}
 			} else {
 				area.setSacaled1To10Tai(-1);
 			}
@@ -319,7 +301,7 @@ public class TransSuccessService {
 			 * 
 			 * 
 			 */
-			if (populationCount > 100) {
+			if (populationCount > 1000) {
 				double safAreaPopulation = area.getAreasAverageFrequencies() / (area.getShapeArea()
 						/ (populationCount * 0.001));
 				area.setTai(safAreaPopulation);

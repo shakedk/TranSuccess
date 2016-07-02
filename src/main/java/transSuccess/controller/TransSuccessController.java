@@ -52,14 +52,6 @@ public class TransSuccessController {
 		return jsonNode.toString();
 	}
 	
-//	@RequestMapping(value = "/stations", method = RequestMethod.GET,
-//			produces="application/json")
-//	public @ResponseBody String getTelAvivStations() throws JsonProcessingException {
-//		
-//		JsonNode jsonNode = transSuccessService.getTelAvivStations();
-//		return jsonNode.toString();
-//	}
-//	
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(TransSuccessController.class, args);		
 //		TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());
