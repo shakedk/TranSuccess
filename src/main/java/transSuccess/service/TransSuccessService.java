@@ -123,10 +123,6 @@ public class TransSuccessService {
 		return node;
 	}
 
-	// public JsonNode getTelAvivStations() {
-	// return filesRepository.getTelAvivStations();
-	// }
-
 	public static ArrayList<String> getTelAvivStopIDs() {
 		connectToDb();
 		PreparedStatement ps;
@@ -151,7 +147,7 @@ public class TransSuccessService {
 
 	/**
 	 * Updates the hourly frequency (num of buses that pass every hour in each
-	 * station) into DB - stophourlyfrequencies ;; This is only for DB populate
+	 * station) into DB - stophourlyfrequencies ; This is only for DB populate
 	 * use!!!
 	 * 
 	 * @param stopIDs
@@ -162,8 +158,8 @@ public class TransSuccessService {
 		PreparedStatement ps = null;
 		String query;
 		// This will only work if the stopIDs were populated into the table
-		// first!!! Use CSV load
-		// ITerating over 24 hours, for each hour iterating over all the stops
+		// first!!! Use CSV load tool in H2 UI 
+		// Iterating over 24 hours, for each hour iterating over all the stops
 		for (int i = 0; i < hours.length; i++) {
 			query = "update stophourlyfrequencies set hr" + hours[i]
 					+ " = (select count(*) from (select route_id,arrival_time,stop_id from stop_times JOIN trips JOIN calendar where calendar.service_id=trips.service_id AND calendar.sunday='TRUE' and stop_id="
@@ -183,7 +179,6 @@ public class TransSuccessService {
 					ps.setString(2, stopID);
 					ps.addBatch();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -191,7 +186,6 @@ public class TransSuccessService {
 				int[] executeBatch = ps.executeBatch();
 				ps.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -266,8 +260,6 @@ public class TransSuccessService {
 			area = areasData.get(areaID);
 			tai = area.getTai();
 			if (tai >= 0) {
-				// double safAreaPopulationScaled1to10 = (((10 - 1) * (saf -
-				// minSaf)) / (maxSaf - minSaf)) + 1;
 				safAreaPopulationScaled1to10 = ((log(tai) - log(minSaf)) / (log(maxSaf) - log(minSaf))) * 9;
 				if (safAreaPopulationScaled1to10 > 0){
 					area.setSacaled1To10Tai(safAreaPopulationScaled1to10); 
@@ -288,20 +280,8 @@ public class TransSuccessService {
 	private static void calculateAccessabilityIndex(Map<String, AreaProperty> areasData) {
 		for (String areaID : areasData.keySet()) {
 			AreaProperty area = areasData.get(areaID);
-			// SAF/Area/Population (pop>1000)
 			int populationCount = area.getPopulation();
-			
-			/*
-			 * 
-			 * 
-			 * 
-			 * 
-			 *  I chamged this from if (populationCount > 1000) {
-			 * 
-			 * 
-			 * 
-			 */
-			if (populationCount > 1000) {
+			if (populationCount > 500) {
 				double safAreaPopulation = area.getAreasAverageFrequencies() / (area.getShapeArea()
 						/ (populationCount * 0.001));
 				area.setTai(safAreaPopulation);

@@ -53,8 +53,10 @@ public class TransSuccessController {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(TransSuccessController.class, args);		
-//		TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());
+		SpringApplication.run(TransSuccessController.class, args);
+		//The following commented-out code will trigger a db update of the hourly frequencies at each stop
+		// this is needed only for a first time data population into the db
+		//TransSuccessService.updateStopsFreqs(TransSuccessService.getTelAvivStopIDs());
 		
 	}
 }

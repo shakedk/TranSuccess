@@ -9,8 +9,17 @@ function TwoDigits(val) {
 	}
 
 	return val;
+	draw_areas_and_lines();
 }
 
+// Main function for drawing the elements or re-drawing them. map si called
+// first to avoid out of date data
+draw_areas_and_lines = function (startHour="06",endHour="09"){
+	draw_areas_on_map(startHour,endHour);
+	draw_par_coords();
+}
+
+// JQuery Time Slider for hour filtering
 $("#slider").dateRangeSlider({
 	bounds : {
 		min : new Date(2013, 0, 1),
@@ -35,10 +44,30 @@ $("#slider").dateRangeSlider({
 					.getHours());
 		});
 
-// place holder for the parallel-coordinates draw
+/**
+ * General variables used by the map and the Parallel-Coordinates Chart
+ * (abbreviated as PC in this js)
+ */
+
+// change this to the server's IP if you wish for remote access
 var host = "localhost"; // "5.102.230.126"
+
+// place holder for the parallel-coordinates draw
 var parcoords = d3.parcoords()("#parallelCoords");
+
+// Data for the parallel-coordinates chart
 var parCoordData;
+
+// colors used for PC & Map areas/lines
+var colors = ["rgb(129, 16, 237)","rgb(45, 85, 253)","rgb(6, 155, 221)","rgb(0, 192, 191)","rgb(8, 226, 148)","rgb(112, 245, 26)","rgb(196, 187, 0)","rgb(232, 139, 12)","rgb(254, 75, 53)","rgb(238, 17, 128)"];
+	
+// Color use for irrelvant area, e.g. area with no sufficient population or data
+var irrelevantcolor = "rgba(255,0,0,0)";
+
+/**
+ * Generating, coloring and updating the map
+ * 
+ */
 // Importing the mapbox tiles layer. For our purposes, the example map is
 // sufficient
 var mapboxTiles = L
@@ -49,9 +78,9 @@ var mapboxTiles = L
 					mapId : 'mapbox-streets',
 					token : 'pk.eyJ1Ijoic2hha2VkayIsImEiOiJjaWxjYzVxbzIwMDZud2dsejg3Zmw3dncyIn0.1mxg8ZqXNXzMZ2OkH9os5A'
 				});
-// Importing the map from leaflet and adding the tiles layer.
-// The initial view is centered to Tel Aviv, according to the example info
-// (lines 171 and 222).
+
+// Importing the map from leaflet and adding the tiles layer. the coordiantes
+// point to Tel Aviv center
 var map = L.map('map').addLayer(mapboxTiles).setView(
 		[ 32.087917, 34.795551], 13.5);
 var popup = new L.Popup({
@@ -60,57 +89,55 @@ var popup = new L.Popup({
 
 // Initialize the SVG layer
 L.svg().addTo(map);
-// Categorical colors for 2 lines routes and the optional changing station's
-// colors
-var mappingColors = {
-	"areaBorderColor" : "rgb(152,78,163)",
-};
-  // onevariant colors used for PC & Map
-var colors = ["rgb(129, 16, 237)","rgb(45, 85, 253)","rgb(6, 155, 221)","rgb(0, 192, 191)","rgb(8, 226, 148)","rgb(112, 245, 26)","rgb(196, 187, 0)","rgb(232, 139, 12)","rgb(254, 75, 53)","rgb(238, 17, 128)"];
-	
-var irrelevantcolor = "rgba(255,0,0,0)";
 
-// Holds the hues that will be assigned for the waiting time mapping (the
-// station changeStations color).
-// The actual setting is done after the relevant number of optional changing
-// station is calculated.
-var stationsHues;
+
 // We pick up the SVG from the map object
 var svg = d3.select(map.getPanes().overlayPane).append("svg"), g = svg
 		.append("g").attr("class", "leaflet-zoom-hide");
-// Styling variables used areas border
-var sAreaStyle = {
-	"fillColor" : mappingColors.areaBorderColor
-};
+
 var areasLayer;
 
+// Drawing the city's areas on the map with TAI encoded as the area color
+// according to the time filter
 draw_areas_on_map = function(startHour,endHour) {
 	// Preventing filtering for the same hour
 	if (startHour === endHour){
 		alert("Please select an interval of at least two hours");
 		return;
 	}
+	// Getting the area new colors and updating it accordingly
 	d3.json('http://' + host + ':8080/areas/'+startHour+'/'+endHour, function(data) {
-		if (typeof areasLayer != 'undefined'){						
-			updateStyles(data);
+		if (typeof areasLayer != 'undefined'){
+			// Updating the colors data
+			updateAreaColors(data);
+			// If on PC brush mode, filter the areas on the map according to the
+			// brushed lines
 			if (isOnBrushMode){
 				onBrushEvent(brushedLines);
 			} 
-			// Hour Filtering without brushing
+			// Paint areas to dfeault color, based on hour filtering (not Pc
+			// brush)
 			else {
-			rePaintAreas();
+			rePaintAreadToDefault();
 			}
 		} else{
+		// Defining the areas layer with color and behavior for each area
 		areasLayer = L.geoJson(data, {
-			style : getAreaStyle,
+			style : getAreaStyles,
 			onEachFeature : onEachFeature
 		}).addTo(map);
 		}
 	})
 }
 
-var updateStyles = function(data){
-// Creating a map of areaID->Style as the data array isn't soreted
+// Removing highlights from the map
+map.on('click', function(e) {
+	parcoords.unhighlight();
+});
+
+
+var updateAreaColors = function(data){
+// Creating a map of areaID->Style as the data array isn't sorted
 var areaStyleMap = new Map();
 var areaID;
 var areaNewStyle;
@@ -119,54 +146,55 @@ for (i=0; i < data.features.length; i++){
 	areaNewStyle = data.features[i].properties.styleHash;
 	areaStyleMap.set(areaID,areaNewStyle);
 }
-// Updating styles
+
+// Updating the actual styles
 		areasLayer.eachLayer(function(layer) {												
 			layer.feature.properties.styleHash = areaStyleMap.get(layer._leaflet_id);
-			// layer.feature.
 		});					  
 
-}
+};
 	
-var color = function(d) {
-
+// Mapping TAI to a color from the color scale
+var getColorforTai = function(d) {
 	if (d >= 0 && d <= colors.length) {
 		return colors[d];
 	}
 	return irrelevantcolor;
-
 };
 
-function getAreaStyle(feature) {
+// Default area styles
+function getAreaStyles(feature) {
 	return {
 		weight : 0.5,
 		opacity : 0.5,
 		color : 'black',
 		fillOpacity : 0.7,
-		fillColor : color(feature.properties.styleHash),
+		fillColor : getColorforTai(feature.properties.styleHash),
 	};
 }
 
-// Reapint Areas back to default paint
-function rePaintAreas() {
+
+// aeapint Areas back to default paint
+function rePaintAreadToDefault() {
 	areasLayer.eachLayer(function(layer) {
-		layer.setStyle(getAreaStyle(layer.feature));
+		layer.setStyle(getAreaStyles(layer.feature));
 	});
 }
 
+// Define the beahviour of each area - defining right click for text show
 function onEachFeature(feature, layer) {
 	var areaID = feature.properties.Name;				
 	layer._leaflet_id = areaID;
 	layer.on({
 		contextmenu : contextmenu,
-		// mouseout : mouseout,
-		// text : areaID
 	});
 }
-
+// Clear highlights from the map
 map.on('click', function(e) {
 	parcoords.unhighlight();
 });
-var closeTooltip;
+
+// var closeTooltip;
 
 function contextmenu(e) {
 	// Highlight the cooresponding line in the PC chart
@@ -179,7 +207,6 @@ function contextmenu(e) {
 
 	if (!popup._map)
 		popup.openOn(map);
-	window.clearTimeout(closeTooltip);
 
 	// highlight feature
 	layer.setStyle({
@@ -192,18 +219,11 @@ function contextmenu(e) {
 	}
 }
 
-function mouseout(e) {
-	areasLayer.resetStyle(e.target);
-}
-
-function zoomToFeature(e) {
-	map.fitBounds(e.target.getBounds());
-}
-
-// Adding a legend with sequential horizontal bar for easy access
+// Adding a legend with color scheme
 var legend = L.control({
 	position : 'bottomright'
 });
+
 legend.onAdd = function(map) {
 	var div = L.DomUtil.create('div', 'legend');
 	div.innerHTML += '<p style="margin:auto; background: linear-gradient(to right, '
@@ -213,19 +233,10 @@ legend.onAdd = function(map) {
 };
 legend.addTo(map);
 
-// Adding the areas and the Pc right upon page load
-$(document).ready(function() {
-	draw_areas_and_lines();
-});
-
-// Main function for drawing the elements or re-drawing them. map si called
-// first to avoid out of date data
-draw_areas_and_lines = function (startHour="06",endHour="09"){
-	draw_areas_on_map(startHour,endHour);
-	draw_par_coords();
-}
-
-// load csv file and create the chart
+/**
+ * Generating and updating the parallel coordinates chart
+ */
+// Generate the PC chart
 draw_par_coords = function() {
 		d3.json('http://' + host + ':8080/areaPcProperties/',
 			function(data) {
@@ -275,6 +286,7 @@ draw_par_coords = function() {
 							.range([ range, 1 ]);
 				}
 
+				// Defining the PC axes
 				var dimensions = {
 					"numberOfStopsInArea" : {
 						title : 'Stops in Zone',
@@ -284,7 +296,6 @@ draw_par_coords = function() {
 					"shapeArea" : {
 						title : 'Area (km^2)',
 						// Scaling the yAxis as sqrt to be less condensed
-						// yscale : sqrtScale('shapeArea'),
 						yscale : shapeAreaSqrtScale('shapeArea'),
 					},
 					"population" : {
@@ -304,13 +315,13 @@ draw_par_coords = function() {
 					"medianIncome" : {
 						title : 'Median Income',
 						ticks: 6,
-						// yscale : sqrtScale('medianIncome'),
 					},
 
 				};
-
+				
+				
 				var pcColor = function(d) {
-					return color(Math.floor(d.tai));
+					return getColorforTai(Math.floor(d.tai));
 					
 				}
 				// Filtering out business areas (their Median income is < 0)
@@ -318,8 +329,7 @@ draw_par_coords = function() {
 				data = data.filter(function(d) {								
 					return parseFloat(d.tai) >= 0
 				})
-				parcoords.data(data)
-				.color(pcColor).dimensions(dimensions)
+				parcoords.data(data).color(pcColor).dimensions(dimensions)
 						.detectDimensions()
 						.hideAxis(["areaID"])
 						.render().alpha(0.5)
@@ -361,51 +371,6 @@ draw_par_coords = function() {
 							}			
 				// update map hightlight brush event
 				parcoords.on("brush",onBrushEvent );
-
-				var sltBrushMode = d3.select('#sltBrushMode')
-				sltBrushMode.selectAll('option').data(
-						parcoords.brushModes()).enter().append(
-						'option').text(function(d) {
-					return d;
-				});
-
-				sltBrushMode.on('change', function() {
-					parcoords.brushMode(this.value);
-					switch (this.value) {
-					case 'None':
-						d3.select("#pStrums").style("visibility",
-								"hidden");
-						d3.select("#lblPredicate").style(
-								"visibility", "hidden");
-						d3.select("#sltPredicate").style(
-								"visibility", "hidden");
-						d3.select("#btnReset").style("visibility",
-								"hidden");
-						break;
-					case '2D-strums':
-						d3.select("#pStrums").style("visibility",
-								"visible");
-						break;
-					default:
-						d3.select("#pStrums").style("visibility",
-								"hidden");
-						d3.select("#lblPredicate").style(
-								"visibility", "visible");
-						d3.select("#sltPredicate").style(
-								"visibility", "visible");
-						d3.select("#btnReset").style("visibility",
-								"visible");
-						break;
-					}
-				});
-				d3.select('#btnReset').on('click', function() {
-					parcoords.brushReset();
-					rePaintAreas();
-					isOnBrushMode = false;
-				})
-				d3.select('#sltPredicate').on('change', function() {
-					parcoords.brushPredicate(this.value);
-				});
 			});
 };
 
@@ -420,10 +385,11 @@ parLineHightlight = function(e) {
 	}
 };
 
+//highlighting areas according to brushed lines 
 setAreaHighlighted = function(polygon) {
 	polygon.setStyle({
 		fillOpacity : 1,
-		fillColor: color(polygon.feature.properties.styleHash),
+		fillColor: getColorforTai(polygon.feature.properties.styleHash),
 	});
 };
 
