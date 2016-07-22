@@ -18,6 +18,9 @@ html, body {
 	height: 100%;
 }
 
+#slider{
+	margin-bottom: 5px;
+}
 .parcoords .marks {
 	margin-left: 90px !important;
 }
