@@ -2,19 +2,12 @@ $(document).ready(function() {
 // Used to maintain opacity if the PC is on brush mode and the user changed time
 // interval
 var isOnBrushMode = false;
-var brushedLines;
-function TwoDigits(val) {
-	if (val < 10) {
-		return "0" + val;
-	}
-
-	return val;
-	draw_areas_and_lines();
-}
 
 // Main function for drawing the elements or re-drawing them. map si called
 // first to avoid out of date data
-draw_areas_and_lines = function (startHour="06",endHour="09"){
+draw_areas_and_lines = function (startHour,endHour){
+	startHour = typeof startHour  === 'undefined' ? "06" : startHour;
+	endHour = typeof endHour  === 'undefined' ? "09" : endHour;
 	draw_areas_on_map(startHour,endHour);
 	draw_par_coords();
 }
@@ -393,5 +386,14 @@ setAreaHighlighted = function(polygon) {
 	});
 };
 
+var brushedLines;
+function TwoDigits(val) {
+	if (val < 10) {	
+		return "0" + val;
+	}
+	return val;	
+}
+
+draw_areas_and_lines();
 
 });

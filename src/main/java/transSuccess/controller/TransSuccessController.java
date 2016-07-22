@@ -35,6 +35,7 @@ public class TransSuccessController {
 	@RequestMapping(value = "/areaPcProperties", method = RequestMethod.GET,
 			produces="application/json")
 	public @ResponseBody String getAreasPropertiesForPcChart() throws IOException {
+		System.out.println("getAreasPropertiesForPcChart");
 		JsonNode jsonNode = transSuccessService.getAreasPropertiesForPcChart();
 		return jsonNode.toString();
 		
@@ -43,7 +44,8 @@ public class TransSuccessController {
 	@RequestMapping(value = "/areas/{startHour}/{endHour}", method = RequestMethod.GET,
 			produces="application/json")
 	public @ResponseBody String getTelAvivAreas(@PathVariable("startHour") int startHour,
-			@PathVariable("endHour") int endHour) throws IOException {		
+			@PathVariable("endHour") int endHour) throws IOException {	
+		System.out.println("getTelAvivAreas");
 		if (endHour-startHour==0){
 			return "";
 		}
