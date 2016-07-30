@@ -44,22 +44,26 @@ public class TransSuccessService {
 
 	public JsonNode getTelAvivAreasForMap(int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("service_getTelAvivAreasForMap");
 		return updateAreasInMapProperties(filesRepository.getTelAvivAreas(), startHour, endHour);
 	}
 
 	public JsonNode getAreasRanks() throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("service_getAreasRanks");
 		return filesRepository.getAreaRanks();
 	}
 
 	public JsonNode getAreasPropertiesForPcChart()
 			throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("service_getAreasPropertiesForPcChart");
 		return updateAreasInPCProperties(filesRepository.getAreasPropertiesForPcChart());
 	}
 	
 	private class areaSerializerForPC extends JsonSerializer<AreaProperty> {
 	    @Override
-	    public void serialize(AreaProperty value, JsonGenerator jgen, SerializerProvider provider) 
+	    public void serialize(AreaProperty value, JsonGenerator jgen, SerializerProvider provider)	    
 	      throws IOException, JsonProcessingException {
+			System.out.println("service_areaSerializerForPC");
 	        jgen.writeStartObject();
 	        jgen.writeNumberField("areaID", value.getAreaID());
 	        jgen.writeNumberField("numberOfStopsInArea", +value.getNumberOfStopsInArea());
@@ -75,6 +79,7 @@ public class TransSuccessService {
 	@SuppressWarnings("unchecked")
 	private JsonNode updateAreasInPCProperties(JsonNode jsonFile)
 			throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("service_updateAreasInPCProperties");
 		JsonNode node = null;
 		while (!isAreasDataUpdated) {}
 			ObjectMapper mapper = new ObjectMapper();
@@ -97,6 +102,7 @@ public class TransSuccessService {
 
 	private JsonNode updateAreasInMapProperties(JsonNode file, int startHour, int endHour)
 			throws JsonParseException, JsonMappingException, IOException {
+		System.out.println("service_updateAreasInMapProperties");
 		ObjectMapper m = new ObjectMapper();
 		FeatureCollection featureCollection = m.readValue(file.toString(), FeatureCollection.class);
 		List<Feature> features = featureCollection.getFeatures();
@@ -124,6 +130,8 @@ public class TransSuccessService {
 	}
 
 	public static ArrayList<String> getTelAvivStopIDs() {
+		System.out.println("service_getTelAvivStopIDs");
+
 		connectToDb();
 		PreparedStatement ps;
 		ResultSet rs;
@@ -153,7 +161,7 @@ public class TransSuccessService {
 	 * @param stopIDs
 	 * @return
 	 */
-	public static ArrayList<String> updateStopsFreqs(ArrayList<String> stopIDs) {
+	public static ArrayList<String> updateStopsFreqs(ArrayList<String> stopIDs) {		
 		connectToDb();
 		PreparedStatement ps = null;
 		String query;
@@ -281,7 +289,9 @@ public class TransSuccessService {
 		for (String areaID : areasData.keySet()) {
 			AreaProperty area = areasData.get(areaID);
 			int populationCount = area.getPopulation();
-			if (populationCount > 500) {
+			double medianIncome = area.getMedianIncome();
+			//If population is below 500 or median income is 0 - TAI should be ignored
+			if (populationCount > 500 && medianIncome > 0) {
 				double safAreaPopulation = area.getAreasAverageFrequencies() / (area.getShapeArea()
 						/ (populationCount * 0.001));
 				area.setTai(safAreaPopulation);

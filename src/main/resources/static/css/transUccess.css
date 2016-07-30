@@ -6,11 +6,19 @@ html, body {
 }
 
 #parallelCoords {
+	/*No slider settings*/
 	flex: 1; 
-	/*margin-top: auto;*/
-	height: 80%;	
-	margin-bottom: 150px;
+	margin-top: auto;
+	height: 90%;
+		margin-bottom: 100px; 
 	
+
+/*
+//with slider settings: 
+flex: 1;
+	height: 80%;	
+	margin-bottom: 150px; 
+*/	
 }
 
 #map {

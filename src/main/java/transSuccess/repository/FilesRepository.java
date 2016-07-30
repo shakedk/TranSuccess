@@ -20,16 +20,11 @@ public class FilesRepository {
 	}
 
 	private static final String AREAS_PATH = "static/tel_aviv_areas.json";
-	private static final String STATION_PATH = "static/stations.geojson";
 	private static final String AREA_RANKS_PATH = "static/AreaRanks.json";
 	private static final String AREA_SUB_INDICES = "static/areaProperties.json";
 
 	public JsonNode getTelAvivAreas() {
 		return getFileFromPath(AREAS_PATH);
-	}
-
-	public JsonNode getTelAvivStations() {
-		return getFileFromPath(STATION_PATH);
 	}
 
 	public JsonNode getAreaRanks() {
